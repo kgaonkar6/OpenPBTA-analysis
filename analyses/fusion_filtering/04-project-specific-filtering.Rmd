@@ -5,7 +5,7 @@ output: html_notebook
 params:
   histology:
     label: "Clinical file" 
-    value: data/pbta-histologies.tsv
+    value: data/release_003_008/pbta-histologies.tsv
     input: file
   group:
     label: "Grouping variable"
@@ -13,11 +13,11 @@ params:
     input: string
   dataStranded:
     label: "Input filtered fusion dataframe"
-    value: scratch/standardFusionStrandedExp_QC_expression_GTExComparison_annotated.RDS
+    value: analyses/fusion_filtering/scratch/standardFusionStrandedExp_QC_expression_GTExComparison_annotated.RDS
     input: file
   dataPolya:
     label: "Input filtered fusion dataframe"
-    value: scratch/standardFusionPolyaExp_QC_expression_GTExComparison_annotated.RDS
+    value: analyses/fusion_filtering/scratch/standardFusionPolyaExp_QC_expression_GTExComparison_annotated.RDS
     input: file    
   numCaller:
     label: "Least Number of callers to have called fusion"
@@ -250,7 +250,7 @@ putative_driver_fusions<-rbind(QCGeneFiltered_recFusionUniq,putative_driver_anno
   unique() %>% dplyr::select (-group) %>%
   as.data.frame()
 
-write.table(putative_driver_fusions,file.path(root_dir,"scratch","pbta-fusion-putative-oncogenic-preQC.tsv"),sep="\t",quote=FALSE,row.names = FALSE)
+write.table(putative_driver_fusions,file.path(root_dir,"analyses","fusion_filtering","scratch","pbta-fusion-putative-oncogenic-preQC.tsv"),sep="\t",quote=FALSE,row.names = FALSE)
 
 ```
 

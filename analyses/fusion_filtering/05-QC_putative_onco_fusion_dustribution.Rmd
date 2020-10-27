@@ -5,11 +5,11 @@ output: html_notebook
 params:
   histology:
     label: "Clinical file" 
-    value: data/pbta-histologies.tsv
+    value: data/release_003_008/pbta-histologies.tsv
     input: file
   dataPutativeFusion:
     label: "Input putative oncogene fusion dataframe"
-    value: scratch/pbta-fusion-putative-oncogenic-preQC.tsv
+    value: analyses/fusion_filtering/scratch/pbta-fusion-putative-oncogenic-preQC.tsv
     input: file
   countHistology:
     label: "Integer cutoff of fusion found in more than N histologies"
