@@ -73,8 +73,8 @@ fusion_df <- read_tsv(
   file.path(data_dir, "pbta-fusion-putative-oncogenic.tsv"))
 
 # Read in GISTIC `broad_values_by_arm.txt` file
-unzip(file.path(root_dir, data_dir, "pbta-cnv-consensus-gistic.zip"),
-      exdir = file.path(root_dir, "data"),
+unzip(file.path(data_dir, "pbta-cnv-consensus-gistic.zip"),
+      exdir = file.path(data_dir),
       files = file.path("pbta-cnv-consensus-gistic", "broad_values_by_arm.txt"))
 
 gistic_df <- data.table::fread(file.path(data_dir,

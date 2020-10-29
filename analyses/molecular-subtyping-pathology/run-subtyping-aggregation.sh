@@ -24,3 +24,5 @@ Rscript -e "rmarkdown::render('02-incorporate-clinical-feedback.Rmd', clean = TR
 
 # Run the third notebook that incorporates pathology feedback into final labels
 Rscript -e "rmarkdown::render('03-incorporate-pathology-feedback.Rmd', params=list(is_ci = ${IS_CI}), clean = TRUE)"
+
+cp results/compiled_molecular_subtypes_with_clinical_pathology_feedback.tsv ~/Desktop/d3b-pnoc003-omics/analyses/mol-clinical-annotation-files/input/compiled_molecular_subtypes_with_clinical_pathology_feedback.tsv
