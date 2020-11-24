@@ -76,7 +76,6 @@ kap_meier_model_file <- file.path(results_dir, "survival_model_DMG_H3_low_v_HGG_
 
 ```{r Read in metadata}
 # choose Diffuse astrocytic and oligodendroglial tumor samples
-# remove RNA-Seq because subtyping in HGG is from DNA abberations and samples where only RNA-Seq is available cannot be subtyped
 # remove cell-lines from this analysis as well
 metadata <- readr::read_tsv(
   metadata_file,
@@ -87,11 +86,11 @@ metadata <- readr::read_tsv(
       composition=="Solid Tissue") %>%
   as.data.frame() 
 
+# read in given list of samples from Ammar
 splicing_types<- readr::read_tsv("input/HGG_AN_list.tsv")
 
 splicing_types <- splicing_types %>%
   dplyr::left_join(metadata)
-
 
 ```
 
@@ -101,16 +100,15 @@ This way we subset the metadata to 1 single primary sample per patient ID
 
 ```{r Read in independent}
 
-# Patients with multiple different molecular subtype might affect downstream analysis for survival so using independent_primary sample set which has 1-1 sample-patient matches
-independent_primary <- readr::read_tsv(independent_primary_file)
+# Patients with multiple different molecular subtype might affect downstream analysis for survival so using random selection of 1-1 sample-patient matches
+unique_match <- splicing_types %>%
+    dplyr::group_by(Kids_First_Participant_ID) %>%
+    dplyr::summarize(Kids_First_Biospecimen_ID = sample(Kids_First_Biospecimen_ID, 1)) 
 
 # select only independent primary WGS bs_ids to get overall survival
 metadata <- metadata %>%
   dplyr::filter(Kids_First_Biospecimen_ID %in%
-                  independent_primary$Kids_First_Biospecimen_ID)
-
-# select only WGS that matches given RNA biospecimens by sample_id in splicing list 
-metadata <- metadata %>%
+                  unique_match$Kids_First_Biospecimen_ID) %>%
   dplyr::left_join(splicing_types[,c("sample_id","type")],suffix=c("_DNA","_RNA")) %>%
   dplyr::filter(!is.na(type)) 
 
