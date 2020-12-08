@@ -41,7 +41,7 @@ stranded_expression_file="${data_path}/pbta-gene-expression-rsem-fpkm.stranded.r
 normal_expression_file="${references_path}/Brain_FPKM_hg38_matrix.txt.zip"
 
 # metadata files
-histologies_file="${data_path}/pbta-histologies.tsv"
+histologies_file="${data_path}/pbta-histologies-base.tsv"
 independent_samples_file="${data_path}/independent-specimens.wgswxs.primary-plus.tsv"
 
 # data release files to use for recurrent fusion/fused genes detection
@@ -105,3 +105,8 @@ Rscript 06-recurrent-fusions-per-histology.R --standardFusionCalls $putative_onc
                                              --clinicalFile $histologies_file \
                                              --outputfolder $results_path \
                                              --independentSpecimensFile $independent_samples_file
+
+# copy results/pbta-fusion-putative-oncogenic.tsv to data release
+cp results/pbta-fusion-putative-oncogenic.tsv ../../data/release_003_008/
+
+

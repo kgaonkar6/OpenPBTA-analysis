@@ -34,7 +34,7 @@ if (!dir.exists(subset_dir)) {
 
 # Read in metadata
 metadata <-
-  read_tsv(file.path( data_dir, "pbta-histologies.tsv"), 
+  read_tsv(file.path( data_dir, "pbta-histologies-base.tsv"),
            guess_max = 10000)
 
 # Select wanted columns in metadata for merging and assign to a new object
@@ -111,13 +111,13 @@ hgg_lesions_df <- read_tsv(
 # Read in the JSON file that contains the strings we'll use to include or
 # exclude samples for subtyping - see 00-HGG-select-pathology-dx
 path_dx_list <- jsonlite::fromJSON(
-  file.path(subset_dir, 
+  file.path(subset_dir,
             "hgg_subtyping_path_dx_strings.json")
 )
 
 #### Filter metadata -----------------------------------------------------------
 
-# Filter metadata based on pathology diagnosis fields and include samples that 
+# Filter metadata based on pathology diagnosis fields and include samples that
 # should be classified as high-grade glioma based on defining lesions
 
 # First, filter to exclude cell lines
@@ -131,13 +131,13 @@ path_dx_df <- tumor_metadata_df %>%
   # Inclusion on the basis of CBTTC harmonized pathology diagnoses
   filter(pathology_diagnosis %in% path_dx_list$exact_path_dx)
 
-# PNOC003 trial samples - the pathology diagnoses are not harmonized so we need
+# PNOC003 and PNOC008 trial samples - the pathology diagnoses are not harmonized so we need
 # to go by the cohort field
 pnoc_df <- tumor_metadata_df %>%
-  filter(cohort == "PNOC003")
+  filter(cohort == "PNOC003" | cohort == "PNOC008")
 
 # Now samples on the basis of the defining lesions
-hgg_sample_ids <- hgg_lesions_df %>% 
+hgg_sample_ids <- hgg_lesions_df %>%
   filter(defining_lesion) %>%
   pull(sample_id)
 lesions_df <- tumor_metadata_df %>%
@@ -145,7 +145,7 @@ lesions_df <- tumor_metadata_df %>%
 
 # Putting it all together now
 hgg_metadata_df <- bind_rows(
-  path_dx_df, 
+  path_dx_df,
   pnoc_df,
   lesions_df
 ) %>%
@@ -169,16 +169,16 @@ filter_process_expression <- function(expression_mat) {
   # are samples (biospecimen ID are the rownames).
   #
   # Only intended for use in the context of this script!
-  
+
   # Filter to HGG samples only -- we can use hgg_metadata_df because it is
   # subset to RNA-seq samples
   filtered_expression <- expression_mat %>%
     select(intersect(hgg_metadata_df$Kids_First_Biospecimen_ID,
                      colnames(expression_mat)))
-  
+
   # Log2 transformation
   log_expression <- log2(filtered_expression + 1)
-  
+
   # Scale does column centering, so we transpose first
   long_zscored_expression <- scale(t(log_expression),
                                    center = TRUE,

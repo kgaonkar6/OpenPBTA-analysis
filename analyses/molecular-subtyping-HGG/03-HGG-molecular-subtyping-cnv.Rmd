@@ -68,7 +68,7 @@ Are all the WGS samples that pass the inclusion criteria in the consensus SEG fi
 
 ```{r}
 consensus_seg_ids <- read_tsv(file.path(data_dir,
-                                        "pbta-cnv-consensus.seg.gz")) %>%
+                                        "pbta-all-CN-cnv-consensus.seg.gz")) %>%
   pull(ID)
 consensus_seg_ids <- unique(consensus_seg_ids)
 ```

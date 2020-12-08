@@ -1,6 +1,6 @@
 ---
 title: "Compile molecular subtyping results"
-output: 
+output:
   html_notebook:
     toc: true
     toc_float: true
@@ -24,7 +24,7 @@ The purpose of this notebook is to aggregate molecular subtyping results from th
 # Assigning params$is_ci to running_in_ci avoids a locked binding error
 running_in_ci <- params$is_ci
 
-# Are we testing? In case of a non 0/1 number, we recast as logical, and then 
+# Are we testing? In case of a non 0/1 number, we recast as logical, and then
 # ensure logical.
 if (running_in_ci %in% c(0,1)) running_in_ci <- as.logical(running_in_ci)
 if (!(is.logical(running_in_ci)))
@@ -41,9 +41,9 @@ library(tidyverse)
 
 ```{r}
 bind_exp_strategies <- function(results_df) {
-  # Many of the molecular subtyping tables contain a 
+  # Many of the molecular subtyping tables contain a
   # Kids_First_Biospecimen_ID_RNA and Kids_First_Biospecimen_ID_DNA column,
-  # this function separates those out and binds the rows to mirror how 
+  # this function separates those out and binds the rows to mirror how
   # pbta-histologies.tsv is organized
   #
   # Args:
@@ -55,12 +55,12 @@ bind_exp_strategies <- function(results_df) {
     select(-Kids_First_Biospecimen_ID_DNA) %>%
     filter(!is.na(Kids_First_Biospecimen_ID_RNA)) %>%
     rename(Kids_First_Biospecimen_ID = Kids_First_Biospecimen_ID_RNA)
-  
+
   dna_df <- results_df %>%
     select(-Kids_First_Biospecimen_ID_RNA) %>%
     filter(!is.na(Kids_First_Biospecimen_ID_DNA)) %>%
     rename(Kids_First_Biospecimen_ID = Kids_First_Biospecimen_ID_DNA)
-  
+
   # sometimes there will be multiple RNA-seq assays per single DNA-seq assay
   # or vice versa, which is why this distinct is necessary
   return(bind_rows(rna_df, dna_df) %>% distinct())
@@ -93,10 +93,10 @@ When we run this locally, we want to tie it to a specific version of the histolo
 
 ```{r}
 if (running_in_ci) {
-  histologies_file <- file.path(data_dir, "pbta-histologies.tsv")
+  histologies_file <- file.path(data_dir, "pbta-histologies-base.tsv")
 } else {
-  histologies_file <- file.path(data_dir, 
-                                "pbta-histologies.tsv")
+  histologies_file <- file.path(data_dir,
+                                "pbta-histologies-base.tsv")
 }
 ```
 
@@ -151,7 +151,7 @@ The EWS results were post-v15 and come with their own `Notes` column.
 ews_results_df <- bind_exp_strategies(ews_results_df) %>%
   rename(integrated_diagnosis = integrated_diagnosis_reclassified,
          short_histology = short_histology_reclassified,
-         broad_histology = broad_histology_reclassified) 
+         broad_histology = broad_histology_reclassified)
 ```
 
 ### Handling HGG
@@ -166,7 +166,7 @@ hgg_results_df <- bind_exp_strategies(hgg_results_df) %>%
                     short_histology,
                     broad_histology,
                     Notes),
-             by = "Kids_First_Biospecimen_ID") 
+             by = "Kids_First_Biospecimen_ID")
 
 hgg_results_df <- hgg_results_df %>%
   dplyr::mutate(
@@ -189,10 +189,10 @@ lgat_results_df <- bind_exp_strategies(lgat_results_df) %>%
                     short_histology,
                     broad_histology,
                     Notes),
-             by = "Kids_First_Biospecimen_ID") 
+             by = "Kids_First_Biospecimen_ID")
 ```
 
-### Handling EPN 
+### Handling EPN
 
 ```
 # TODO

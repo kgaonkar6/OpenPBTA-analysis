@@ -1,0 +1,279 @@
+---
+title: "TP53 HIST1H3B,H3F3A,HIST1H3C alterations in cohort"
+output: html_notebook
+
+params:
+  histology:
+    label: "Base cohort specific annotation file"
+    value: data/release_003_008/pbta-histologies-base.tsv
+    input: file
+  rna_variants:
+    label: "GATK RNA variant calling from cohort3a samples"
+    value: analyses/mol-clinical-annotation-files/input/50_RNAseq_only_mutations.maf.filter.txt
+    input: file
+  snv_consensus:
+    label: "consensus SNV"
+    value: data/release_003_008/pbta-merged-chop-method-consensus_somatic.maf.gz 
+    input: file
+  cnv_consensus:       
+    label: "consensus CNV"
+    value: data/release_003_008/pbta-consensus_seg_annotated_cn_autosomes.tsv.gz
+    input: file  
+
+---
+
+## Background
+
+We need to add TP53 and H3 K28 status per BS_ID for the given cohorts. 
+The following conditions needed to be considered: 
+ -  For DNA samples the TP53/H3 K28M SNV status is being derived from the pbta-snv-consensus-mutation.maf.tsv.gz 
+ - RNA-Seq only samples don't have  TP53/H3 K28M status from SNV or CNV consensus calls. So Bo has provided me with a list of Tp53/H3 K28M status for those RNA-Seq samples in cohort3a from running GATK variant calling
+ - TP53 CNV status is being derived from consensus_seg_annotated_cn_autosomes.tsv.gz. 
+ Please note:
+ there might be false positives: We see a lot of CNV changes in TP53 losses which doesn't correspond to the tp53 classifier scores so might be updated/reviewed again
+
+## Directories
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+set.seed(12345)
+
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+setwd(root_dir)
+input_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "input")
+
+scratch_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "scratch")
+
+
+output_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "output","annotation_files")
+```
+
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+set.seed(12345)
+
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+setwd(root_dir)
+library(data.table)
+library(tidyverse)
+
+cohort_plot_labels<-read_tsv(file.path(params$histology))
+# the cell line composition file comes from #610 in OpenPBTA_analysis repo
+cell_line_composition <- read_tsv(file.path(input_dir,"cell-line-composition.tsv"),
+                                  col_types = 
+                                    readr::cols( aliquot_id  = readr::col_character()))
+
+cohort_plot_labels <- cohort_plot_labels %>%
+  left_join(cell_line_composition)
+
+consensus_snv <- fread(file.path(root_dir,params$snv_consensus),
+                       select=c("IMPACT","Hugo_Symbol",
+                                "Tumor_Sample_Barcode",
+                                "HGVSp_Short")) %>%
+  unique()
+
+rna_seq <- fread(file.path(root_dir,params$rna_variants),
+                 select=c("IMPACT",
+                          "Hugo_Symbol",
+                          "Tumor_Sample_Barcode",
+                          "HGVSp_Short")) %>%
+  unique()
+
+consensus_cnv <- read_tsv(file.path(root_dir,
+                                      params$cnv_consensus)) 
+
+
+# Choose IDs from WGS, WXS or RNA_Seq from params$rna_variants 
+# This helps keep the mutation status from specific BS IDs 
+# that were checked for Histone and TP53 mutation as output
+
+ids_output <- unique(c(consensus_snv$Tumor_Sample_Barcode,
+                     consensus_cnv$biospecimen_id,
+                     rna_seq$Tumor_Sample_Barcode))
+
+
+```
+
+## Source function to get alterations for given genes
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+source(file.path(root_dir,"analyses","mol-clinical-annotation-files","utils","get_alt.R"))
+
+alt<-get_alt(c("TP53","HIST1H3B","H3F3A","HIST1H3C"))
+```
+
+# Format calls
+`format_snv_binary` should be used when we need only 1/0 for presence and absence of a Moderate/High impact mutation in given gene
+
+`format_snv_hgvs` should be used when we need the specific amino acid change in variants per gene
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+format_snv_binary<-function(gene,alt_caller,caller) {
+  colname<-paste0(gene,"_MOD_HIGH_mut_",caller)
+  alt_caller <- alt_caller %>% 
+    dplyr::select(c("Tumor_Sample_Barcode",
+                    "Hugo_Symbol")) %>%
+    # select only TP53
+    dplyr::filter(Hugo_Symbol %in% gene ) %>% 
+    # unique so that 1 = mutation exists 0 mutation doesn't exist
+    unique()
+  if (nrow(alt_caller)>0) {
+  alt_caller <- alt_caller %>%
+    # reshape to make TP53 row
+    reshape2::dcast(Tumor_Sample_Barcode ~ Hugo_Symbol,fun.aggregate = length) %>%
+    # rename 
+    dplyr::rename(!!colname := gene )
+  }
+}
+
+format_snv_hgvs<-function(gene,alt_caller,caller,aggregate=FALSE) {
+  # aggregate == FALSE will return length of unique hgvs 
+  # if there are multiple 
+  colname<-paste0(gene,"_MOD_HIGH_mut_",caller)
+  alt_caller <- alt_caller %>%
+  dplyr::select (c("Tumor_Sample_Barcode",
+                    "Hugo_Symbol","HGVSp_Short")) %>%
+  # select only gene 
+  dplyr::filter(Hugo_Symbol== gene) %>% 
+  # unique so that 1 = mutation exists 0 mutation doesn't exist
+  unique() 
+  if (nrow(alt_caller)>0) {
+    if (aggregate==FALSE) {
+      alt_caller <- alt_caller %>%
+        # reshape to make gene row
+        reshape2::dcast(Tumor_Sample_Barcode ~ Hugo_Symbol,value.var = "HGVSp_Short") %>%
+        # rename 
+        dplyr::rename( !! colname := gene )
+    } else {
+      # aggregate == TRUE then multiple HGVS are concatenated with ","
+      alt_caller <- alt_caller %>%
+        group_by(Tumor_Sample_Barcode,Hugo_Symbol) %>%
+        summarise("HGVSp_Short"= toString(HGVSp_Short)) %>%
+        # reshape to make gene row
+        reshape2::dcast(Tumor_Sample_Barcode ~ Hugo_Symbol,value.var = "HGVSp_Short") %>%
+        # rename 
+        dplyr::rename( !! colname := gene )
+    }
+  }
+}
+
+```
+
+
+## Format Tp53 alterations
+
+```{r}
+
+# binary
+TP53_consensus <- alt$consensus_snv %>% format_snv_binary("TP53",.,"consensus")
+
+TP53_rna_seq_snv <- alt$rna_seq_snv %>% format_snv_binary("TP53",.,"rna_seq_snv")
+
+# get HGVS changes
+TP53_consensus_hgvs <- alt$consensus_snv %>% format_snv_hgvs("TP53",.,"consensus",aggregate = TRUE) %>%
+  dplyr::rename(TP53_MOD_HIGH_mut_HGVS_consensus=TP53_MOD_HIGH_mut_consensus)
+
+TP53_rna_seq_snv_hgvs <- alt$rna_seq_snv %>% format_snv_hgvs("TP53",.,"rna_seq_snv",aggregate = TRUE) %>%
+  dplyr::rename(TP53_MOD_HIGH_mut_HGVS_rna_seq_snv=TP53_MOD_HIGH_mut_rna_seq_snv)
+  
+TP53_consensus_cnv <- alt$consensus_cnv %>%
+  # select TP53
+  dplyr::filter(gene_symbol=="TP53") %>% 
+  # reshape to make gain /loss columns
+  reshape2::dcast(biospecimen_id ~ status ,value.var = "status",fun.aggregate = length) %>%
+  # rename columns
+  dplyr::rename("TP53_gain_consensus_cnv"="gain","TP53_loss_consensus_cnv"="loss")
+
+merge_TP53 <- TP53_consensus %>%
+  full_join(TP53_rna_seq_snv,by="Tumor_Sample_Barcode") %>%
+  full_join(TP53_consensus_cnv,by=c("Tumor_Sample_Barcode"="biospecimen_id")) %>%
+  full_join(TP53_consensus_hgvs ,by="Tumor_Sample_Barcode") %>%
+  full_join(TP53_rna_seq_snv_hgvs ,by="Tumor_Sample_Barcode") %>%
+  dplyr::filter(Tumor_Sample_Barcode %in% cohort_plot_labels$Kids_First_Biospecimen_ID)
+
+merge_TP53[is.na(merge_TP53)]<-0  
+
+
+```
+
+## Format H3.3 alterations
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+
+H3.3_consensus <- alt$consensus_snv %>% format_snv_hgvs("H3F3A",.,"consensus")
+
+H3.3_rna_seq_snv <- alt$rna_seq_snv %>% format_snv_hgvs("H3F3A",.,"rna_seq_snv")
+
+merge_H3.3 <- H3.3_consensus  %>%
+  full_join(H3.3_rna_seq_snv,by="Tumor_Sample_Barcode") %>%
+  dplyr::filter(Tumor_Sample_Barcode %in% cohort_plot_labels$Kids_First_Biospecimen_ID)
+
+merge_H3.3[is.na(merge_H3.3)]<-0   
+
+
+```
+
+## Format H3.1B alterations
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+
+H3.1B_consensus <- alt$consensus_snv %>% format_snv_hgvs("HIST1H3B",.,"consensus")
+
+# No H3.1B mutation for rnaseq only samples
+# H3.1B_rna_seq_snv <- alt$rna_seq_snv %>% format_snv_hgvs("HIST1H3B",.,"rna_seq_snv")
+
+merge_H3.1B <- H3.1B_consensus %>%
+  dplyr::filter(Tumor_Sample_Barcode %in% cohort_plot_labels$Kids_First_Biospecimen_ID)
+
+merge_H3.1B[is.na(merge_H3.1B)]<-0   
+
+```
+
+## Format H3.1C alterations
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+
+H3.1C_consensus <- alt$consensus_snv %>% format_snv_hgvs("HIST1H3C",.,"consensus")
+
+# No H3.1C mutation in rnaseq only samples
+# H3.1C_rna_seq_snv <- alt$rna_seq_snv %>% format_snv_hgvs("HIST1H3C",.,"rna_seq_snv")
+
+merge_H3.1C <- H3.1C_consensus %>%
+  dplyr::filter(Tumor_Sample_Barcode %in% cohort_plot_labels$Kids_First_Biospecimen_ID)
+
+merge_H3.1C[is.na(merge_H3.1C)]<-0   
+
+```
+
+
+```{r}
+
+cohort_plot_labels %>% 
+  dplyr::filter(sample_type=="Tumor",
+                Kids_First_Biospecimen_ID %in% ids_output) %>%
+  left_join(merge_H3.1C,by=c("Kids_First_Biospecimen_ID"="Tumor_Sample_Barcode")) %>%
+  left_join(merge_H3.1B,by=c("Kids_First_Biospecimen_ID"="Tumor_Sample_Barcode")) %>%
+  left_join(merge_H3.3,by=c("Kids_First_Biospecimen_ID"="Tumor_Sample_Barcode")) %>%
+  left_join(merge_TP53,by=c("Kids_First_Biospecimen_ID"="Tumor_Sample_Barcode")) %>%
+  dplyr::select(Kids_First_Biospecimen_ID,
+                sample_id,
+                sample_type,
+                cell_line_composition,
+                starts_with("HIST"),
+                starts_with("H3F3A"),
+                starts_with("TP53")) %>%
+  write_tsv(file.path(output_dir,"TP53_Histone_mutation_status.tsv"))
+
+```
+
+```
+
+

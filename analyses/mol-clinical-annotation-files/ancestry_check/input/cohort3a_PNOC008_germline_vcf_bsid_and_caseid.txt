@@ -1,0 +1,11 @@
+BS_ID	case_id	VCF
+BS_RVT7EHNX	PNOC008-10	d692a464-7a37-4029-8c06-7b62afafc7b6.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_P78BDBZE	PNOC008-6	096b1fa0-0cbb-41d0-81af-c5c58aed7cc1.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_8BNM6DE1	PNOC008-5	c2f0d363-c525-41e2-a21c-60bb5101c16e.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_3EZR108Y	PNOC008-2	8e320197-0fae-462e-bb15-820347708c8a.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_63WRZJ06	PNOC008-11	ecd28ab7-be3e-4761-adb3-f8077c0847c1.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_QTF9SJGP	PNOC008-3	d3de297d-0312-4d1e-a4a1-8ae0e965d1d1.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_APXB3MQ5	PNOC008-8	5681def8-e594-4866-b612-26ad07a8f20b.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_XV5XFKE8	PNOC008-12	b5affc42-234b-4552-91c6-f30c68bd2b8b.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_KN6FCN12	PNOC008-13	86319bd2-424d-44bf-928b-03a0ad97ee54.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz
+BS_NGHQ8CNA	PNOC008-15	d3534542-57a8-46a5-a37b-bc59f735cdd0.gatk.hardfiltered.PASS.vcf.gz.hg38_multianno.vcf.gz

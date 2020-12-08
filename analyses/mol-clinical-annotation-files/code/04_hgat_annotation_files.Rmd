@@ -1,0 +1,437 @@
+---
+title: "003 annotation file"
+output: html_notebook
+
+params:
+  histology:
+    label: "Base cohort specific annotation file"
+    value: data/release_003_008/pbta-histologies-base.tsv
+    input: file
+  rna_variants:
+    label: "GATK RNA variant calling from cohort3a samples"
+    value: analyses/mol-clinical-annotation-files/input/50_RNAseq_only_mutations.maf.filter.txt
+    input: file  
+---
+## Background
+
+We need to add TP53 and H3 K28 status per BS_ID for the given cohorts. 
+The following conditions needed to be considered: 
+- TP53, H3 muatations are matched between WGS/WXS/Panel to RNA-Seq samples using sample_id and cell_line_composition (since some sample_ids have multiple BS_IDs from different cell_line_composition)
+- RNA-Seq only samples don't have  TP53/H3 K28M status from SNV or CNV consensus calls. So Bo has provided me with a list of H3 K28M status for those RNA-Seq samples in cohort3a which will be added to the cohort_participant_ids as well
+
+## Directories
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+set.seed(12345)
+
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+setwd(root_dir)
+input_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "input")
+
+
+output_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "output",
+                        "annotation_files")
+```
+
+
+```{r}
+library(data.table)
+library(tidyverse)
+
+histology<-read_tsv(file.path(root_dir,params$histology),
+                    col_types = 
+                                    readr::cols( aliquot_id  = readr::col_character())) 
+
+HGAT_ids <- histology %>% 
+  dplyr::filter(histology$sample_type=="Tumor" &
+           histology$short_histology=="HGAT" ) %>%
+  dplyr::pull(Kids_First_Biospecimen_ID)
+
+```
+
+# Annotation specific to 003 project 
+
+TP53_H3_status_df : TP53 cnv and snv status as well as H3 K28M mutation status 
+In addition for samples with only RNAseq available mutations in TP53 and histone gennes were identified using GATK RNAseq SNV calling [pipeline](https://cavatica.sbgenomics.com/u/d3b-bixu/rs-14jwqpdg-pnoc003-omics-analysis/apps/#d3b-bixu/rs-14jwqpdg-pnoc003-omics-analysis/d3b_gatk_rnaseq_snv_plus_vep/0)
+
+age_breaks : The categories were described [here](https://github.com/d3b-center/bixu-tracker/issues/753#issuecomment-672277050) and coded in [here](https://github.com/d3b-center/d3b-pnoc003-omics/blob/data/clinical_annotation_file/analyses/7.%20Mol:clinical%20Annotation%20files/age_breaks_chisq.Rmd) to categorize patients per age in years
+
+
+cohort_membership : The cohorts to be used for 003 
+Old name | New name | Description of cohort ** 
+--- | --- | --- 
+cohort_1 | pnoc003-dx | only 1 PNOC003 primary Kids_First_Biospecimen_ID per 1 Kids_First_Participant_ID as per @jainpayal022's [selection](https://docs.google.com/spreadsheets/d/1LRAuglLBzkKRhjzS9PtgVhqYMJqjlovDT-8-_jlJp5E/edit#gid=562578128)
+cohort_2  | pnoc003-dx-prog-pm | 1 PNOC003 primary and ALL associated progression/autopsy samples as per @jainpayal022's [selection ](https://docs.google.com/spreadsheets/d/1LRAuglLBzkKRhjzS9PtgVhqYMJqjlovDT-8-_jlJp5E/edit#gid=310829697)
+cohort_3a | pbta-hgat-dx | 1 (random) primary sample Kids_First_Biospecimen_ID per 1 Kids_First_Participant_ID from OpenPBTA (within this file PNOC003 primary samples are from cohort1 )
+cohort_3b | pbta-hgat-dx-prog-pm | pbta-hgat-dx samples and 1 randomly selected progression sample if available (within this file pnoc003-dx-prog-pm cohort is used to get 1 primary and associated progression/relapse sample as per @jainpayal022's selection) 
+NA | pbta-hgat-dx-wgs-rna | 1 (random) primary sample Kids_First_Biospecimen_ID per experimental_strategy was add for each Kids_First_Participant_ID plus PNOC003 Initial Tumor WGS 
+
+
+cell_line_composition : cell_line_composition from [issue](https://github.com/AlexsLemonade/OpenPBTA-analysis/issues/610)
+
+molecular_subtype_table : In this [branch of OpenPBTA](https://github.com/kgaonkar6/OpenPBTA-analysis/tree/molecular_subtping_v18) molecular-subtyping-HGG and molecular-subtyping-pathology is run with the following inputs:
+
+
+```{r}
+
+# TP53 H3 mutation status
+TP53_H3_status_df <- read_tsv(file.path(output_dir,
+                                 "TP53_Histone_mutation_status.tsv")) %>%
+  dplyr::mutate(H3.status = 
+                  dplyr::case_when(
+                      H3F3A_MOD_HIGH_mut_consensus == "p.K28M" ~ "H3.3 K28",
+                      H3F3A_MOD_HIGH_mut_consensus == "p.G35R"~ "H3.3 G35",
+                      H3F3A_MOD_HIGH_mut_rna_seq_snv == "p.K28M" ~ "H3.3 K28",
+                      H3F3A_MOD_HIGH_mut_rna_seq_snv  == "p.G35R"~ "H3.3 G35",
+                      HIST1H3B_MOD_HIGH_mut_consensus == "p.K28M" ~"H3.1 K28",
+                      HIST1H3C_MOD_HIGH_mut_consensus == "p.K28M" ~"H3.1 K28",
+                      TRUE ~ "0")) %>%
+  dplyr::mutate(TP53alteration_status = ifelse(  # Any Tp53 SNV/CNV variants present ?
+                                                TP53_MOD_HIGH_mut_consensus==1 |
+                                                TP53_gain_consensus_cnv==1 |
+                                                TP53_loss_consensus_cnv==1 |
+                                                TP53_MOD_HIGH_mut_rna_seq_snv == 1,
+                                              # Yes  
+                                              1,
+                                              # No
+                                              0)) 
+
+# age breaks for annotation/chisq
+age_breaks<- read_tsv(file.path(output_dir,
+                      "age_breaks_file.tsv")) %>%
+  unique()
+
+# autopsy tumor locatin 
+autopsy_location <- read_tsv(file.path(output_dir,
+                      "tumor_location.tsv")) %>%
+  unique()
+
+# rna variants from GATK
+rna_variants <- fread(file.path(root_dir,params$rna_variants))
+
+# cohort meembership
+cohort_membership <- read_tsv(file.path(output_dir,
+                                        "cohort_membership.tsv"))
+
+# the cell line composition file comes from #610 in OpenPBTA_analysis repo
+cell_line_composition <- read_tsv(file.path(input_dir,"cell-line-composition.tsv"),
+                                  col_types = 
+                                    readr::cols( aliquot_id  = readr::col_character()))
+
+histology <- histology %>%
+  left_join(cell_line_composition)
+
+```
+
+# molecular subtyping compiled from clinical and pathology feedback
+
+```{r}
+
+# molecular_subtype, integrated_diagnosis
+molecular_subtype_table <- read_tsv(
+  file.path(root_dir,
+            "analyses",
+            "molecular-subtyping-pathology",
+            "results",
+            "compiled_molecular_subtypes_with_clinical_pathology_feedback.tsv"))
+```
+
+Match histology to molecular subtyping
+```{r}
+
+histology <- histology %>%
+  dplyr::select(-molecular_subtype,-integrated_diagnosis,) %>%
+  left_join(molecular_subtype_table) %>%
+  unique()
+
+
+```
+
+# Tp53 and H3 status for WGS,WXS,Panel
+
+```{r}
+cohort_plot_labels <- histology %>%
+  dplyr::filter(experimental_strategy %in% c("WGS","WXS","Panel")) %>% 
+  left_join(TP53_H3_status_df,by=c("Kids_First_Biospecimen_ID",
+                                   "sample_id",
+                                   "sample_type",
+                                   "cell_line_composition")) %>%
+  left_join(age_breaks,by=c("Kids_First_Biospecimen_ID")) 
+
+cohort_plot_labels$TP53alteration_status[
+  which ((cohort_plot_labels$TP53alteration_status==0 |
+           is.na(cohort_plot_labels$TP53alteration_status)) &
+           cohort_plot_labels$Kids_First_Biospecimen_ID %in% HGAT_ids)]<-"No"
+
+cohort_plot_labels$TP53alteration_status[
+  which ( cohort_plot_labels$TP53alteration_status==1 & 
+           cohort_plot_labels$Kids_First_Biospecimen_ID %in% HGAT_ids)]<-"Yes"
+
+cohort_plot_labels$H3.status[
+  which ((cohort_plot_labels$H3.status==0  |
+           is.na(cohort_plot_labels$H3.status)) & 
+           cohort_plot_labels$Kids_First_Biospecimen_ID %in% HGAT_ids)]<-"H3 wildtype"
+
+```
+
+# Tp53 and H3 status RNA-Seq with matched WGS
+
+Here we only match by sample_id since the TP53/H3 status from WGS should be matched to RNA-Seq by sample_id
+
+```{r}
+
+cohort_plot_labels_rna_withwgs <- histology %>%
+  dplyr::filter(experimental_strategy %in% c("RNA-Seq") ) %>% 
+  left_join(TP53_H3_status_df[,which(colnames(TP53_H3_status_df) !="Kids_First_Biospecimen_ID")],
+            by=c(
+              "sample_id",
+              "sample_type",
+              "cell_line_composition")) %>%
+  left_join(age_breaks,by=c("Kids_First_Biospecimen_ID")) 
+
+cohort_plot_labels_rna_withwgs$TP53alteration_status[
+  which( cohort_plot_labels_rna_withwgs$Kids_First_Biospecimen_ID %in% HGAT_ids &
+           ( is.na(cohort_plot_labels_rna_withwgs$TP53alteration_status)|
+           cohort_plot_labels_rna_withwgs$TP53alteration_status==0 ))] <- "No"
+
+cohort_plot_labels_rna_withwgs$TP53alteration_status[
+  which (cohort_plot_labels_rna_withwgs$Kids_First_Biospecimen_ID %in% HGAT_ids &
+           cohort_plot_labels_rna_withwgs$TP53alteration_status==1 )]<-"Yes"
+
+cohort_plot_labels_rna_withwgs$H3.status[
+  which (cohort_plot_labels_rna_withwgs$Kids_First_Biospecimen_ID %in% HGAT_ids &
+           (is.na(cohort_plot_labels_rna_withwgs$H3.status)|
+           cohort_plot_labels_rna_withwgs$H3.status==0 ))]<-"H3 wildtype"
+
+```
+
+# Tp53 and H3 status for only RNA-Seq sample set
+
+Here we only match by Kids_First_Biospeciemen_ID since the TP53/H3 status from RNA-Seq only GATK variant calling should be matched directly
+
+
+```{r}
+cohort_plot_labels_rna_only <- histology %>%
+  dplyr::filter(experimental_strategy %in% c("RNA-Seq") ,
+                Kids_First_Biospecimen_ID %in% 
+                  rna_variants$Tumor_Sample_Barcode) %>% 
+  left_join(TP53_H3_status_df,by=c("Kids_First_Biospecimen_ID",
+                                   "sample_id",
+                                   "sample_type",
+                                   "cell_line_composition")) %>%
+  left_join(age_breaks,by=c("Kids_First_Biospecimen_ID")) 
+
+cohort_plot_labels_rna_only$TP53alteration_status[
+  which( cohort_plot_labels_rna_only$Kids_First_Biospecimen_ID %in% HGAT_ids &
+           ( is.na(cohort_plot_labels_rna_only$TP53alteration_status)|
+           cohort_plot_labels_rna_only$TP53alteration_status==0 ))] <- "No"
+
+cohort_plot_labels_rna_only$TP53alteration_status[
+  which (cohort_plot_labels_rna_only$Kids_First_Biospecimen_ID %in% HGAT_ids &
+           cohort_plot_labels_rna_only$TP53alteration_status==1 )]<-"Yes"
+
+cohort_plot_labels_rna_only$H3.status[
+  which (cohort_plot_labels_rna_only$Kids_First_Biospecimen_ID %in% HGAT_ids &
+           (is.na(cohort_plot_labels_rna_only$H3.status)|
+           cohort_plot_labels_rna_only$H3.status==0 ))]<-"H3 wildtype"
+
+
+cohort_plot_labels_rna_only <- cohort_plot_labels_rna_only %>%
+  dplyr::mutate(
+                integrated_diagnosis = case_when(grepl("H3.3 K28",H3.status)~"Diffuse midline glioma",
+                                                 grepl("H3.1 K28",H3.status)~"Diffuse midline glioma",
+                                                 grepl("H3.3 G35",H3.status)~"High-grade glioma",
+                                                 grepl("H3 wildtype", H3.status) ~ "High-grade glioma",
+                                                 TRUE ~ integrated_diagnosis),
+                molecular_subtype = case_when(grepl("H3.3 K28",H3.status)~"DMG, H3 K28",
+                                              grepl("H3.1 K28",H3.status)~"DMG, H3 K28",
+                                              grepl("H3.3 G35",H3.status)~"HGG, H3 G35",
+                                              grepl("H3 wildtype", H3.status) ~ "High-grade glioma",
+                                                 TRUE ~ molecular_subtype))
+
+
+```
+
+```{r}
+# merging WGS/WXS/Panel, with RNA-Seq from matched WGS and only RNA-Seq samples to samples set 
+cohort_plot_labels<-rbind(cohort_plot_labels,cohort_plot_labels_rna_withwgs,cohort_plot_labels_rna_only)
+```
+
+# add cohort membership columns
+
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>% left_join(cohort_membership) 
+
+```
+
+# add autopsy tumor location
+
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>% 
+  # merge with new locations for autopsy
+  left_join(autopsy_location, by="Kids_First_Biospecimen_ID",suffix=c(".old",".new")) %>%
+  # if primary_site.new if na add primary_site.old from v17 OpenPBTA
+  dplyr::mutate(primary_site.new = 
+                  if_else(is.na(primary_site.new),
+                          primary_site.old,primary_site.new) ) %>%
+  # rename to primary_site
+  dplyr::rename(primary_site=primary_site.new) %>%
+  # remove primary_site.old
+  dplyr::select(-primary_site.old)
+
+```
+
+
+
+# Edits
+stranded and Stranded changed to stranded
+
+```{r}
+
+cohort_plot_labels$RNA_library[
+  grep("Stranded",cohort_plot_labels$RNA_library)
+] = "stranded"
+
+```
+
+## Removing HGG,To be classified if classified from rna variant calling
+
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>%
+  dplyr::filter(!(molecular_subtype=="HGG, To be classified" & 
+                  Kids_First_Biospecimen_ID %in% rna_variants$Tumor_Sample_Barcode)) %>%
+  unique()
+  
+
+
+```
+
+## Renaming cohort_participant_id to P-XX for plots
+```{r}
+pnoc003_manifest <- read_csv(file.path(root_dir,
+                                           "analyses",
+                                           "mol-clinical-annotation-files",
+                                           "input",
+                                           "pnoc003_histologies_v17_candidate.csv"),
+                                 col_types = cols(.default = "c")) %>%
+  dplyr::select(kids_first_biospecimen_id, cohort_participant_id) %>%
+  dplyr::rename(P_id=cohort_participant_id,
+                Kids_First_Biospecimen_ID=kids_first_biospecimen_id)
+
+
+
+cohort_plot_labels <- cohort_plot_labels %>% left_join(pnoc003_manifest) %>%
+  dplyr::mutate(cohort_participant_id = case_when(cohort=="PNOC003" ~ P_id,
+                                                  TRUE ~ cohort_participant_id))
+
+```
+
+# Updating P-19 from [comment](https://github.com/d3b-center/d3b-pnoc003-HGG-DMG-omics/pull/97#pullrequestreview-520011473)
+
+For P-19, the following columns will need to be updated manually in the histologies file as this is the only PNOC003 patient alive as of 10012020. This will concurrently be updated on DT as described here
+
+```{r}
+cohort_plot_labels <- cohort_plot_labels %>%
+  dplyr::mutate(OS_days = case_when(cohort_participant_id == "P-19" ~ 1563,
+                                                  TRUE ~ OS_days)
+  )
+
+```
+
+Kids_First_Biospecimen_ID	PFS..days	PFS..mo	OS_days	OS..mo	OS_status
+BS_Z64NEPNE	1563	52.1	1563	52.1	LIVING
+BS_W7MFJZ5A	1563	52.1	1563	52.1	LIVING
+BS_A6YJ3WG2	1563	52.1	1563	52.1	LIVING
+
+
+
+# Updating multiple molecular subtype 
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>%
+  dplyr::mutate(molecular_subtype = case_when(sample_id == "7316-1102" ~ "DMG, H3 K28",
+                                                  TRUE ~ molecular_subtype),
+                molecular_subtype = case_when(sample_id == "7316-158" ~ "HGG, H3 G35",
+                                                  TRUE ~ molecular_subtype),
+                molecular_subtype = case_when(sample_id == "7316-1105" ~ "HGG, H3 G35",
+                                                  TRUE ~ molecular_subtype),
+                molecular_subtype = case_when(sample_id == "7316-2255" ~ "LGG, H3 K28",
+                                                  TRUE ~ molecular_subtype),
+                short_histology = case_when(sample_id == "7316-238"~"ETMR",
+                                            TRUE ~ short_histology),
+                molecular_subtype = case_when(sample_id == "7316-238" ~ "ETMR, C19MC-altered",
+                                              TRUE ~ molecular_subtype),
+                integrated_diagnosis = case_when(sample_id == "7316-238" ~"Embryonal tumor with multilayer rosettes",
+                                                 TRUE ~ integrated_diagnosis))
+
+```
+
+# BS_EE73VE7V	update to K28M 
+This was only found in vardict issue discussed [here](https://github.com/AlexsLemonade/OpenPBTA-analysis/pull/435#issuecomment-581215819)
+
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>%
+  dplyr::mutate(
+                H3F3A_MOD_HIGH_mut_consensus = 
+                  case_when(Kids_First_Biospecimen_ID == "BS_EE73VE7V"~"p.K28M",
+                                            TRUE ~ H3F3A_MOD_HIGH_mut_consensus),
+                H3.status = 
+                  case_when(Kids_First_Biospecimen_ID == "BS_EE73VE7V"~"H3.3 K28",
+                                            TRUE ~ H3.status),
+                molecular_subtype = 
+                  case_when(Kids_First_Biospecimen_ID == "BS_EE73VE7V" ~ "DMG, H3 K28",
+                                              TRUE ~ molecular_subtype),
+                integrated_diagnosis = 
+                  case_when(Kids_First_Biospecimen_ID == "BS_EE73VE7V" ~"Diffuse midline glioma",
+                                                 TRUE ~ integrated_diagnosis))
+
+```
+
+# Update CNS_region 
+
+The values in the histology file have "Midline" and "midline"
+
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>%
+  dplyr::mutate( CNS_region = if_else(CNS_region=="midline","Midline",CNS_region))
+
+```
+
+# P-07 TP53 status for WGS : BS_H8NWA41N and BS_0ATJ22QA with matched TGEN WXS
+
+From @jainpayal022 [comment](https://github.com/d3b-center/d3b-pnoc003-HGG-DMG-omics/issues/150#issuecomment-723287114) 
+We had caught this in our comparative analysis where @zhangb1 looked at WGS v/s WXS -- only 3/67 reads from IGV. In today's 003 call we saw some work from a collaborator that showed that P-07 had TP53 SNV in a clonal manner (I don't have access to this data yet, will share when we do). So makes sense that we did not capture it in WGS but WXS shows it.
+
+```{r}
+
+cohort_plot_labels <- cohort_plot_labels %>%
+  dplyr::mutate(TP53alteration_status = if_else(Kids_First_Biospecimen_ID=="BS_H8NWA41N" |
+                                                  Kids_First_Biospecimen_ID=="BS_0ATJ22QA",
+                                                 "Yes",
+                                                 TP53alteration_status))
+
+```
+
+
+
+#Save
+
+```{r}
+# save file
+cohort_plot_labels <- cohort_plot_labels %>% 
+  unique() %>% 
+  write_tsv(file.path(output_dir,
+                      "pbta-histologies.tsv"))
+
+```

@@ -47,7 +47,7 @@ if (!dir.exists(results_dir)) {
 
 # Read in metadata
 metadata <-
-  readr::read_tsv(file.path(data_dir, "pbta-histologies.tsv"), 
+  readr::read_tsv(file.path(data_dir, "pbta-histologies-base.tsv"), 
                   guess_max = 10000) %>%
   dplyr::filter(sample_type == "Tumor") 
 

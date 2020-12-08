@@ -1,0 +1,242 @@
+---
+title: "QC file for 003 histology file"
+output: pdf_document
+
+params:
+  histology:
+    label: "003 cohort specific annotation file"
+    value: analyses/mol-clinical-annotation-files/output/annotation_files/pbta-histologies.tsv
+    input: file
+---
+## Background
+QC for histology for stake holders to check through
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+set.seed(12345)
+library(tidyverse)
+
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+setwd(root_dir)
+input_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "input")
+
+
+output_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "output",
+                        "annotation_files")
+
+```
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+cohort_plot_labels <- read_tsv(file.path(root_dir,
+                                         params$histology),
+                               col_types = 
+                                    readr::cols( aliquot_id  = readr::col_character()))
+```
+"Not Reported" in column age_at_diagnois is converted to `NA`
+
+# RNA library
+
+what are all the rna_libraries
+
+```{r}
+cohort_plot_labels %>% dplyr::select(RNA_library,cohort) %>% table()
+```
+
+
+
+# Any duplicates in Kids_First_Biospecimen_IDs
+
+```{r}
+
+check_df<-cohort_plot_labels %>% group_by(Kids_First_Biospecimen_ID) %>% tally() %>% arrange(desc(n)) 
+any(check_df$n>1)
+
+```
+
+
+
+# TP53 status experimental_strategy check
+Here I'm checking 
+- per sample_id are there are different values 
+- if WGS/WXS alteration is matched with RNA-Seq per sample_id
+
+```{r}
+
+cohort_plot_labels %>%  
+  dplyr::filter(TP53alteration_status %in% c("Yes","No"),sample_type=="Tumor",short_histology=="HGAT") %>% 
+  dplyr::group_by(sample_id) %>%
+  dplyr::summarise(number_anno=toString(length(unique(TP53alteration_status))), 
+                   TP53alteration_status = toString(unique(TP53alteration_status)),
+                   experimental_strategy = toString(experimental_strategy)
+                   ) %>%
+  dplyr::arrange(desc(number_anno))
+
+```
+
+
+# H3 status experimental_strategy check
+Here I'm checking 
+- per sample_id are there are different values 
+- if WGS/WXS alteration is matched with RNA-Seq per sample_id
+
+```{r}
+
+cohort_plot_labels %>%  
+  dplyr::filter(grepl("K28|wildtype|G35",H3.status),sample_type=="Tumor",short_histology=="HGAT") %>% 
+  dplyr::group_by(sample_id) %>%
+  dplyr::summarise(number_anno=toString(length(unique(H3.status))), 
+                   H3.status = toString(unique(H3.status)),
+                   experimental_strategy = toString(experimental_strategy)
+                   ) %>%
+  dplyr::arrange(desc(number_anno))
+
+
+```
+
+# check if all Diffuse astrocytic and oligodendroglial tumor are annotated
+
+```{r}
+all_sample_id <-cohort_plot_labels %>% 
+  dplyr::filter(sample_type=="Tumor",short_histology=="HGAT") %>%
+  dplyr::select(sample_id,short_histology) %>% 
+  pull(sample_id) %>% unique() 
+
+
+h3_sample_id<-cohort_plot_labels %>%  
+  dplyr::filter(grepl("K28|wildtype|G35",H3.status),short_histology=="HGAT") %>%
+  dplyr::pull(sample_id) %>% unique()
+
+tp53_sample_id <- cohort_plot_labels %>%  
+  dplyr::filter(TP53alteration_status %in% c("Yes","No"),short_histology=="HGAT") %>% 
+  dplyr::pull(sample_id)%>% unique()
+
+print("All sample_ids have h3 mutation status")
+all(all_sample_id %in% h3_sample_id & length(all_sample_id)==length(h3_sample_id))
+print("All sample_ids have tp53 mutation status")
+all(all_sample_id %in% tp53_sample_id & length(all_sample_id)==length(tp53_sample_id))
+
+```
+
+```{r}
+
+all_kf_bs_id <-cohort_plot_labels %>% 
+  dplyr::filter(sample_type=="Tumor",short_histology=="HGAT") %>%
+  pull(Kids_First_Biospecimen_ID) %>% unique() 
+
+
+h3_kf_bs_id<-cohort_plot_labels %>%  
+  dplyr::filter(grepl("K28|wildtype|G35",H3.status),short_histology=="HGAT") %>%
+  dplyr::pull(Kids_First_Biospecimen_ID) %>% unique()
+
+tp53_kf_bs_id <- cohort_plot_labels %>%  
+  dplyr::filter(TP53alteration_status %in% c("Yes","No"),short_histology=="HGAT") %>% 
+  dplyr::pull(Kids_First_Biospecimen_ID)%>% unique()
+
+print("All Kids_First_Biospecimen_IDs have h3 mutation status")
+all(all_kf_bs_id %in% h3_kf_bs_id & length(all_kf_bs_id)==length(h3_kf_bs_id))
+print("All Kids_First_Biospecimen_IDs have tp53 mutation status")
+all(all_kf_bs_id %in% tp53_kf_bs_id & length(all_kf_bs_id)==length(tp53_kf_bs_id))
+
+
+```
+
+# Get sample number per cohort
+```{r}
+
+pnoc003_dx <- cohort_plot_labels %>%
+  dplyr::filter(grepl("Y",.$`pnoc003-dx`)) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, experimental_strategy) %>%
+  unique() %>% 
+  pull(experimental_strategy) %>%
+  table() %>%
+  as.list()
+
+pnoc003_dx_prog <- cohort_plot_labels %>%
+  dplyr::filter(grepl("Y",.$`pnoc003-dx-prog-pm`)) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, experimental_strategy) %>%
+  unique() %>% 
+  pull(experimental_strategy) %>%
+  table() %>%
+  as.list()
+
+pbta_hgat_dx <- cohort_plot_labels %>%
+  dplyr::filter(grepl("Y",.$`pbta-hgat-dx`)) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, experimental_strategy) %>%
+  unique() %>% 
+  pull(experimental_strategy) %>%
+  table() %>%
+  as.list()
+
+pbta_hgat_dx_prog <- cohort_plot_labels %>%
+  dplyr::filter(grepl("Y",.$`pbta-hgat-dx-prog-pm`)) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, experimental_strategy) %>%
+  unique() %>% 
+  pull(experimental_strategy) %>%
+  table() %>%
+  as.list()
+
+
+pbta_hgat_dx_wgs_rna <- cohort_plot_labels %>%
+  dplyr::filter(grepl("Y",.$`pbta-hgat-dx-wgs-rna`)) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, experimental_strategy) %>%
+  unique() %>% 
+  pull(experimental_strategy) %>%
+  table() %>%
+  as.list()
+
+count <- list("pnoc003-dx" = pnoc003_dx,
+     "pnoc003-dx-prog" = pnoc003_dx_prog,
+     "pbta-hgat-dx"= pbta_hgat_dx,
+     "pbta-hgat-dx-prog" = pbta_hgat_dx_prog,
+     "pbta-hgat-dx-wgs-rna"= pbta_hgat_dx_wgs_rna)
+
+rlist::list.save(count,
+             file = file.path(root_dir,
+                       "analyses",
+                       "mol-clinical-annotation-files",
+                       "output",
+                       "annotation_files",
+                       "count_experimental_strategy_per_cohort.yaml"))
+  
+
+```
+
+
+# Check annotation columns
+ [1] "H3.status"                                      
+ [2] "integrated_diagnosis"                           
+ [3] "cohort"                                         
+ [4] "TP53alteration_status"                          
+ [5] "OS_status"                                      
+ [6] "age_at_diagnosis_less_than_1_year"              
+ [7] "age_at_diagnosis_more_than_1_less_than_5_years" 
+ [8] "age_at_diagnosis_more_than_5_less_than_10_years"
+ [9] "age_at_diagnosis_more_than_10_years"            
+[10] "reported_gender"                                
+[11] "CNS_region"    
+[12] "autopsy_tumor_location"
+
+```{r}
+annotation_cols <- unlist(str_split("H3.status,integrated_diagnosis,cohort,TP53alteration_status,OS_status,age_at_diagnosis_less_than_1_year,age_at_diagnosis_more_than_1_less_than_5_years,age_at_diagnosis_more_than_5_less_than_10_years,age_at_diagnosis_more_than_10_years,reported_gender,CNS_region,primary_site", ","))
+
+get_count<-function(x){
+cohort_plot_labels %>% 
+    dplyr::filter(short_histology=="HGAT",sample_type=="Tumor") %>%
+    dplyr::group_by(!!as.name(x)) %>%
+    tally() %>%
+    arrange(desc(n))
+}
+
+lapply(annotation_cols,function(x) get_count(x))
+
+
+
+```
+
+```
+

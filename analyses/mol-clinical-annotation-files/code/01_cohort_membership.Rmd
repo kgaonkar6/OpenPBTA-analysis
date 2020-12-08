@@ -1,0 +1,234 @@
+---
+title: "CBTN + PNOC003 + PNOC008 cohort1/2/3a/3b"
+output: html_notebook
+
+---
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+set.seed(12345)
+library(tidyverse)
+library(googlesheets4)
+
+# Setting seed because of these duplicates that randomly select 1 sample_id per patient
+# 7316-158 has duplicates so in the 07-13-2020 release chose : BS_TV5B86ZD outof the following 
+# BS_5P1TN10Z	7316-158	PT_9BZETM0M	C36285	Initial CNS Tumor	RNA-Seq
+# BS_TV5B86ZD	7316-158	PT_9BZETM0M	C36285	Initial CNS Tumor	RNA-Seq
+# 
+# 7316-1893 has duplicates so in the 07-13-2020 release chose : BS_M85CXHDV out of the following
+# BS_6VPKXXMR	7316-1893	PT_6PP78VNE	C312912	Recurrence	RNA-Seq
+# BS_M85CXHDV	7316-1893	PT_6PP78VNE	C312912	Recurrence	RNA-Seq
+# 
+# cohort3a has multiple Initial CNS samples which in 07-15-2020 1 sample_id will be selected randomly 
+# Kids_First_Participant_ID	sample_id	Kids_First_Biospecimen_ID	cohort	short_histology	experimental_strategy	tumor_descriptor	selection_type
+# PT_59D00MBQ	7316-1936	BS_QG6V29H7	CBTTC	HGAT	WGS	Initial CNS Tumor	primary
+# PT_59D00MBQ	7316-1937	BS_3E5C1PN1	CBTTC	HGAT	WGS	Initial CNS Tumor	primary
+# PT_59D00MBQ	7316-1936	BS_ZVWE73JZ	CBTTC	HGAT	RNA-Seq	Initial CNS Tumor	primary
+# PT_59D00MBQ	7316-1937	BS_TM9MH0RP	CBTTC	HGAT	RNA-Seq	Initial CNS Tumor	primary
+```
+
+## Directories
+
+```{r}
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+setwd(root_dir)
+
+input_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "input")
+
+output_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "output",
+                        "annotation_files")
+
+histology <- read_tsv(file.path("data","release_003_008","pbta-histologies-base.tsv")) 
+
+pnoc003_cohort1_cohort2_ids <- read_sheet('https://docs.google.com/spreadsheets/d/1LRAuglLBzkKRhjzS9PtgVhqYMJqjlovDT-8-_jlJp5E/edit#gid=56083187',range="Cohort 1, 2 membership_BS_IDs_102820") 
+
+```
+
+
+# Add unique primary tumor for PNOC003 samples as per Payal's selection
+
+```{r echo=FALSE, results='hide',message=FALSE,warning=FALSE }
+
+pnoc003_primary <- histology %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% pnoc003_cohort1_cohort2_ids$`Cohort 1_pnoc003-dx`) %>%
+  dplyr::mutate("pnoc003-dx"="Y") %>%
+  select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,"pnoc003-dx",experimental_strategy)
+  
+```
+
+
+# Add unique primary and matched all longitudinal samples for PNOC003 as per Payal's selection
+
+```{r}
+pnoc003_dx_prog_pm <- histology %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% pnoc003_cohort1_cohort2_ids$`Cohort 2_pnoc003-dx-prog-pm`) %>%
+  dplyr::mutate("pnoc003-dx-prog-pm"="Y") %>%
+  select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,"pnoc003-dx-prog-pm",experimental_strategy)
+```
+
+
+## Results {.tabset}
+
+# Get CBTTC PBTA HGAT unique Initial CNS Tumor/Primary/Diagnosis sample 
+
+In CBTTC only 1 WGS Solid Tumor (where avialbale) and 1 RNA-Seq Solid Tumor (where available) is chosen per Kids_First_Participant_ID
+
+```{r echo=FALSE, results='hide',message=FALSE,warning=FALSE}
+
+hgat_primary<- histology %>%
+  # select Tumor WGS ,WXS only
+  dplyr::filter(sample_type == "Tumor", 
+                composition == "Solid Tissue", 
+                # select only CBTTC since Payal has the needed samples for PNOC003 sorted and PNOC008 only WXS will be used
+                cohort=="CBTTC",
+                experimental_strategy %in% c("WGS","RNA-Seq"),
+                short_histology=="HGAT",
+                tumor_descriptor %in% c("Initial CNS Tumor","Primary","Diagnosis")) %>%
+  dplyr::select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,cohort,short_histology,tumor_descriptor,sample_id,experimental_strategy) %>%
+  unique() %>%
+  arrange(Kids_First_Biospecimen_ID) %>%
+  dplyr::group_by(Kids_First_Participant_ID,experimental_strategy) %>%
+  # randomly select 1 BS_id to match to participant id
+  # 07/15/2020 selection criteria was updated to keep only 1 BS id per patient+experimental_strategy for Initial CNS tumor
+  # mainly because of PT_59D00MBQ which has 2 WGS sample_id which are Initial CNS tumor 
+  # makes more sense to have only 1 Initial CNS tumor sample per patient
+  dplyr::summarize(Kids_First_Biospecimen_ID = sample(Kids_First_Biospecimen_ID, 1))  %>%
+  left_join(histology,by=c("Kids_First_Biospecimen_ID","Kids_First_Participant_ID","experimental_strategy")) %>%
+  # we only need to subset independent sample file for CBTTC 
+  dplyr::filter(!is.na(cohort),!is.na(short_histology))
+```
+
+# Get CBTTC PBTA HGAT unique longitudinal sample 
+
+In CBTTC only 1 WGS Solid Tumor (where avialbale) and 1 RNA-Seq Solid Tumor (where available) is chosen per Kids_First_Participant_ID
+
+```{r echo=FALSE, results='hide',message=FALSE,warning=FALSE}
+hgat_logitudinal <- histology %>%
+  # select Tumor WGS ,WXS only
+  dplyr::filter(sample_type == "Tumor", 
+                composition == "Solid Tissue", 
+                # select only CBTTC since Payal has the needed samples for PNOC003 sorted and PNOC008 only WXS will be used
+                (cohort=="CBTTC"),
+                experimental_strategy %in% c("WGS","RNA-Seq"),
+                short_histology=="HGAT",
+                !tumor_descriptor %in% c("Initial CNS Tumor","Primary")) %>%
+  dplyr::select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,cohort,short_histology,tumor_descriptor,sample_id,experimental_strategy) %>%
+  unique() %>%
+  arrange(Kids_First_Biospecimen_ID) %>%
+  dplyr::group_by(Kids_First_Participant_ID,sample_id,experimental_strategy) %>%
+  # randomly select 1 sample_id to match to sample id
+  # multiple longitudinal samples are ok 
+  dplyr::summarize(Kids_First_Biospecimen_ID = sample(Kids_First_Biospecimen_ID, 1))  %>%
+  left_join(histology,by=c("Kids_First_Biospecimen_ID","Kids_First_Participant_ID","sample_id","experimental_strategy"))
+```
+
+# Get PNOC008 PBTA HGAT unique Initial CNS Tumor/Primary/Diagnosis sample 
+Only WXS data was to be selected as per discussion on 07-06-2020 since only WGS was available for 2 samples 
+
+```{r echo=FALSE, results='hide',message=FALSE,warning=FALSE}
+pnoc008_primary <- histology %>%
+  # select Tumor WXS only
+  dplyr::filter(sample_type == "Tumor", 
+                # select WXS
+                experimental_strategy %in% c( "WXS","RNA-Seq"),
+                # select PNOC008
+                (cohort=="PNOC008")) %>%
+  dplyr::select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,cohort,short_histology,experimental_strategy,tumor_descriptor,sample_id) %>%
+  # removing "chop" sample_id because "nant" sample is also 
+  # available for this patient PNOC008-5
+  # removing "BS_KHJMCFQR","PNOC008CHMN1147.chop.dna","NA","PT_FKCPVY7V"
+  # removing "BS_862NMAR7" matched with the above DNA from chop
+  # now all pnoc008 are from nant 
+  dplyr::filter(!Kids_First_Biospecimen_ID %in%  c('BS_KHJMCFQR','BS_862NMAR7')) %>%
+  left_join(histology,
+            by=c("Kids_First_Biospecimen_ID","Kids_First_Participant_ID","sample_id","cohort","short_histology","experimental_strategy","tumor_descriptor"))
+
+  
+```
+
+### HGAT Primary (cohort 3a)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+suppressWarnings(library(DT,quietly = TRUE,verbose = FALSE,warn.conflicts = FALSE))
+hgat_all_primary<-
+  bind_rows(hgat_primary,
+            pnoc003_primary,
+            pnoc008_primary) %>%
+  dplyr::mutate("pbta-hgat-dx"="Y") %>%
+  dplyr::select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,"pbta-hgat-dx",experimental_strategy) %>%
+  unique() 
+```
+
+### HGAT Primary  plus Longitudinal (cohort 3b)
+
+```{r echo=FALSE,message=FALSE,warning=FALSE }
+suppressWarnings(library(DT,quietly = TRUE,verbose = FALSE,warn.conflicts = FALSE))
+hgat_all_primary_longitudinal<-  
+  # add primary sample selected 
+  bind_rows(hgat_all_primary) %>%
+  bind_rows(hgat_logitudinal,
+            pnoc003_dx_prog_pm) %>%
+  dplyr::mutate("pbta-hgat-dx-prog-pm"="Y") %>%
+  as.data.frame() %>% 
+  dplyr::select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,"pbta-hgat-dx-prog-pm",experimental_strategy) %>%
+  unique() 
+```
+
+# pbta-hgat-dx-wgs-rna 
+
+```{r}
+
+cohort1wgs <- read_sheet('https://docs.google.com/spreadsheets/d/1LRAuglLBzkKRhjzS9PtgVhqYMJqjlovDT-8-_jlJp5E/edit#gid=562578128',range="with WGScohort_1_pnoc003-dx 102820") %>% 
+  dplyr::filter(experimental_strategy=="WGS")
+
+pnoc008_wgs <- histology %>%
+  dplyr::filter(cohort == "PNOC008",
+                experimental_strategy == "WGS",
+                sample_type == "Tumor")
+
+hgat_all_primary_wgs_rna <- hgat_all_primary %>%
+  dplyr::filter(experimental_strategy %in% c("WGS","RNA-Seq"))
+
+pbta_hgat_dx_wgs_rna <- histology %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% 
+                  c(cohort1wgs$Kids_First_Biospecimen_ID,
+                    pnoc008_wgs$Kids_First_Biospecimen_ID,
+                    hgat_all_primary_wgs_rna$Kids_First_Biospecimen_ID)) %>%
+  unique() %>%
+  dplyr::mutate("pbta-hgat-dx-wgs-rna"="Y") %>%
+  select(Kids_First_Participant_ID,Kids_First_Biospecimen_ID,"pbta-hgat-dx-wgs-rna",experimental_strategy)
+  
+
+```
+
+
+
+
+# Merge to 1 file for cohort membership
+
+```{r}
+
+histology %>% left_join(pnoc003_primary) %>%
+  left_join(pnoc003_dx_prog_pm) %>%
+  left_join(hgat_all_primary) %>%
+  left_join(hgat_all_primary_longitudinal) %>%
+  left_join(pbta_hgat_dx_wgs_rna) %>%
+  dplyr::select(Kids_First_Biospecimen_ID,
+                "pnoc003-dx",
+                "pnoc003-dx-prog-pm",
+                "pbta-hgat-dx",
+                "pbta-hgat-dx-prog-pm",
+                "pbta-hgat-dx-wgs-rna",
+                experimental_strategy) %>%
+  write_tsv(file.path(output_dir,"cohort_membership.tsv"))
+
+```
+
+
+
+

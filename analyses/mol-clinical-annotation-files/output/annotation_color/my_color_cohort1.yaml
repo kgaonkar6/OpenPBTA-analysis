@@ -1,0 +1,19 @@
+H3.status:
+   H3.1 mutant: '#BB8FCE'
+   H3.3 mutant: '#7D3C98'
+   H3 wildtype: '#F5B7B1'
+TP53 mutation status:
+   'Yes': '#5D6D7E'
+   'No': '#AEB6BF'
+Alive @ 6mo:
+   'Yes': '#884EA0'
+   'No': '#EBDEF0'
+Alive @ 12mo:
+   'Yes': '#17A589'
+   'No': '#A2D9CE'
+Prog @ 6mo:
+   'Yes': '#D35400'
+   'No': '#F6DDCC'
+Prog @ 12 mo:
+   'Yes': '#D4AC0D'
+   'No': '#FCF3CF'

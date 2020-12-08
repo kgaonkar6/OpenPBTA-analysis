@@ -1,0 +1,23 @@
+pnoc003-dx:
+  Panel: 1
+  RNA-Seq: 30
+  WGS: 3
+  WXS: 29
+pnoc003-dx-prog:
+  RNA-Seq: 6
+  WGS: 14
+  WXS: 6
+pbta-hgat-dx:
+  Panel: 1
+  RNA-Seq: 123
+  WGS: 52
+  WXS: 50
+pbta-hgat-dx-prog:
+  Panel: 1
+  RNA-Seq: 185
+  WGS: 102
+  WXS: 52
+pbta-hgat-dx-wgs-rna:
+  RNA-Seq: 123
+  WGS: 84
+

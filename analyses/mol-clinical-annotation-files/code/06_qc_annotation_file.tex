@@ -1,0 +1,538 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
+\usepackage[unicode=true]{hyperref}
+\hypersetup{
+            pdftitle={QC file for 003 histology file},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{QC file for 003 histology file}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\subsection{Background}\label{background}
+
+QC for histology for stake holders to check through
+
+``Not Reported'' in column age\_at\_diagnois is converted to \texttt{NA}
+
+\section{RNA library}\label{rna-library}
+
+what are all the rna\_libraries
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cohort_plot_labels }\OperatorTok{%>%}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(RNA_library,cohort) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{table}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            cohort
+## RNA_library CBTTC PNOC003 PNOC008
+##   poly-A       26      32       0
+##   rna_exome     0       0       9
+##   stranded    970       0      13
+\end{verbatim}
+
+\section{Any duplicates in
+Kids\_First\_Biospecimen\_IDs}\label{any-duplicates-in-kids_first_biospecimen_ids}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{check_df<-cohort_plot_labels }\OperatorTok{%>%}\StringTok{ }\KeywordTok{group_by}\NormalTok{(Kids_First_Biospecimen_ID) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{tally}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n)) }
+\KeywordTok{any}\NormalTok{(check_df}\OperatorTok{$}\NormalTok{n}\OperatorTok{>}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\section{TP53 status experimental\_strategy
+check}\label{tp53-status-experimental_strategy-check}
+
+Here I'm checking - per sample\_id are there are different values - if
+WGS/WXS alteration is matched with RNA-Seq per sample\_id
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cohort_plot_labels }\OperatorTok{%>%}\StringTok{  }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(TP53alteration_status }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{),sample_type}\OperatorTok{==}\StringTok{"Tumor"}\NormalTok{,short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{group_by}\NormalTok{(sample_id) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{number_anno=}\KeywordTok{toString}\NormalTok{(}\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(TP53alteration_status))), }
+                   \DataTypeTok{TP53alteration_status =} \KeywordTok{toString}\NormalTok{(}\KeywordTok{unique}\NormalTok{(TP53alteration_status)),}
+                   \DataTypeTok{experimental_strategy =} \KeywordTok{toString}\NormalTok{(experimental_strategy)}
+\NormalTok{                   ) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(number_anno))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 234 x 4
+##    sample_id number_anno TP53alteration_status experimental_strategy
+##    <chr>     <chr>       <chr>                 <chr>                
+##  1 7316-1052 1           Yes                   RNA-Seq              
+##  2 7316-1055 1           Yes                   RNA-Seq              
+##  3 7316-1057 1           Yes                   RNA-Seq              
+##  4 7316-1059 1           Yes                   RNA-Seq              
+##  5 7316-1060 1           Yes                   RNA-Seq              
+##  6 7316-1062 1           Yes                   RNA-Seq              
+##  7 7316-1064 1           Yes                   RNA-Seq              
+##  8 7316-1068 1           Yes                   RNA-Seq              
+##  9 7316-1085 1           Yes                   WGS, RNA-Seq         
+## 10 7316-1099 1           Yes                   WGS, RNA-Seq         
+## # ... with 224 more rows
+\end{verbatim}
+
+\section{H3 status experimental\_strategy
+check}\label{h3-status-experimental_strategy-check}
+
+Here I'm checking - per sample\_id are there are different values - if
+WGS/WXS alteration is matched with RNA-Seq per sample\_id
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cohort_plot_labels }\OperatorTok{%>%}\StringTok{  }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"K28|wildtype|G35"}\NormalTok{,H3.status),sample_type}\OperatorTok{==}\StringTok{"Tumor"}\NormalTok{,short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{group_by}\NormalTok{(sample_id) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{number_anno=}\KeywordTok{toString}\NormalTok{(}\KeywordTok{length}\NormalTok{(}\KeywordTok{unique}\NormalTok{(H3.status))), }
+                   \DataTypeTok{H3.status =} \KeywordTok{toString}\NormalTok{(}\KeywordTok{unique}\NormalTok{(H3.status)),}
+                   \DataTypeTok{experimental_strategy =} \KeywordTok{toString}\NormalTok{(experimental_strategy)}
+\NormalTok{                   ) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(number_anno))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 234 x 4
+##    sample_id number_anno H3.status   experimental_strategy
+##    <chr>     <chr>       <chr>       <chr>                
+##  1 7316-1052 1           H3.3 K28    RNA-Seq              
+##  2 7316-1055 1           H3 wildtype RNA-Seq              
+##  3 7316-1057 1           H3 wildtype RNA-Seq              
+##  4 7316-1059 1           H3 wildtype RNA-Seq              
+##  5 7316-1060 1           H3.3 G35    RNA-Seq              
+##  6 7316-1062 1           H3.3 K28    RNA-Seq              
+##  7 7316-1064 1           H3 wildtype RNA-Seq              
+##  8 7316-1068 1           H3 wildtype RNA-Seq              
+##  9 7316-1085 1           H3.3 K28    WGS, RNA-Seq         
+## 10 7316-1099 1           H3.3 G35    WGS, RNA-Seq         
+## # ... with 224 more rows
+\end{verbatim}
+
+\section{check if all Diffuse astrocytic and oligodendroglial tumor are
+annotated}\label{check-if-all-diffuse-astrocytic-and-oligodendroglial-tumor-are-annotated}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{all_sample_id <-cohort_plot_labels }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(sample_type}\OperatorTok{==}\StringTok{"Tumor"}\NormalTok{,short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(sample_id,short_histology) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{pull}\NormalTok{(sample_id) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{unique}\NormalTok{() }
+
+
+\NormalTok{h3_sample_id<-cohort_plot_labels }\OperatorTok{%>%}\StringTok{  }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"K28|wildtype|G35"}\NormalTok{,H3.status),short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{pull}\NormalTok{(sample_id) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{unique}\NormalTok{()}
+
+\NormalTok{tp53_sample_id <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}\StringTok{  }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(TP53alteration_status }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{),short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{pull}\NormalTok{(sample_id)}\OperatorTok{%>%}\StringTok{ }\KeywordTok{unique}\NormalTok{()}
+
+\KeywordTok{print}\NormalTok{(}\StringTok{"All sample_ids have h3 mutation status"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "All sample_ids have h3 mutation status"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{all}\NormalTok{(all_sample_id }\OperatorTok{%in%}\StringTok{ }\NormalTok{h3_sample_id }\OperatorTok{&}\StringTok{ }\KeywordTok{length}\NormalTok{(all_sample_id)}\OperatorTok{==}\KeywordTok{length}\NormalTok{(h3_sample_id))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"All sample_ids have tp53 mutation status"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "All sample_ids have tp53 mutation status"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{all}\NormalTok{(all_sample_id }\OperatorTok{%in%}\StringTok{ }\NormalTok{tp53_sample_id }\OperatorTok{&}\StringTok{ }\KeywordTok{length}\NormalTok{(all_sample_id)}\OperatorTok{==}\KeywordTok{length}\NormalTok{(tp53_sample_id))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{all_kf_bs_id <-cohort_plot_labels }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(sample_type}\OperatorTok{==}\StringTok{"Tumor"}\NormalTok{,short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{pull}\NormalTok{(Kids_First_Biospecimen_ID) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{unique}\NormalTok{() }
+
+
+\NormalTok{h3_kf_bs_id<-cohort_plot_labels }\OperatorTok{%>%}\StringTok{  }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"K28|wildtype|G35"}\NormalTok{,H3.status),short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{pull}\NormalTok{(Kids_First_Biospecimen_ID) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{unique}\NormalTok{()}
+
+\NormalTok{tp53_kf_bs_id <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}\StringTok{  }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(TP53alteration_status }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{),short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{pull}\NormalTok{(Kids_First_Biospecimen_ID)}\OperatorTok{%>%}\StringTok{ }\KeywordTok{unique}\NormalTok{()}
+
+\KeywordTok{print}\NormalTok{(}\StringTok{"All Kids_First_Biospecimen_IDs have h3 mutation status"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "All Kids_First_Biospecimen_IDs have h3 mutation status"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{all}\NormalTok{(all_kf_bs_id }\OperatorTok{%in%}\StringTok{ }\NormalTok{h3_kf_bs_id }\OperatorTok{&}\StringTok{ }\KeywordTok{length}\NormalTok{(all_kf_bs_id)}\OperatorTok{==}\KeywordTok{length}\NormalTok{(h3_kf_bs_id))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\StringTok{"All Kids_First_Biospecimen_IDs have tp53 mutation status"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "All Kids_First_Biospecimen_IDs have tp53 mutation status"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{all}\NormalTok{(all_kf_bs_id }\OperatorTok{%in%}\StringTok{ }\NormalTok{tp53_kf_bs_id }\OperatorTok{&}\StringTok{ }\KeywordTok{length}\NormalTok{(all_kf_bs_id)}\OperatorTok{==}\KeywordTok{length}\NormalTok{(tp53_kf_bs_id))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\section{Get sample number per
+cohort}\label{get-sample-number-per-cohort}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pnoc003_dx <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Y"}\NormalTok{,.}\OperatorTok{$}\StringTok{`}\DataTypeTok{pnoc003-dx}\StringTok{`}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(Kids_First_Biospecimen_ID, experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unique}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{pull}\NormalTok{(experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{table}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as.list}\NormalTok{()}
+
+\NormalTok{pnoc003_dx_prog <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Y"}\NormalTok{,.}\OperatorTok{$}\StringTok{`}\DataTypeTok{pnoc003-dx-prog-pm}\StringTok{`}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(Kids_First_Biospecimen_ID, experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unique}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{pull}\NormalTok{(experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{table}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as.list}\NormalTok{()}
+
+\NormalTok{pbta_hgat_dx <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Y"}\NormalTok{,.}\OperatorTok{$}\StringTok{`}\DataTypeTok{pbta-hgat-dx}\StringTok{`}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(Kids_First_Biospecimen_ID, experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unique}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{pull}\NormalTok{(experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{table}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as.list}\NormalTok{()}
+
+\NormalTok{pbta_hgat_dx_prog <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Y"}\NormalTok{,.}\OperatorTok{$}\StringTok{`}\DataTypeTok{pbta-hgat-dx-prog-pm}\StringTok{`}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(Kids_First_Biospecimen_ID, experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unique}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{pull}\NormalTok{(experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{table}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as.list}\NormalTok{()}
+
+
+\NormalTok{pbta_hgat_dx_wgs_rna <-}\StringTok{ }\NormalTok{cohort_plot_labels }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(}\KeywordTok{grepl}\NormalTok{(}\StringTok{"Y"}\NormalTok{,.}\OperatorTok{$}\StringTok{`}\DataTypeTok{pbta-hgat-dx-wgs-rna}\StringTok{`}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(Kids_First_Biospecimen_ID, experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unique}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{pull}\NormalTok{(experimental_strategy) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{table}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{as.list}\NormalTok{()}
+
+\NormalTok{count <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\StringTok{"pnoc003-dx"}\NormalTok{ =}\StringTok{ }\NormalTok{pnoc003_dx,}
+     \StringTok{"pnoc003-dx-prog"}\NormalTok{ =}\StringTok{ }\NormalTok{pnoc003_dx_prog,}
+     \StringTok{"pbta-hgat-dx"}\NormalTok{=}\StringTok{ }\NormalTok{pbta_hgat_dx,}
+     \StringTok{"pbta-hgat-dx-prog"}\NormalTok{ =}\StringTok{ }\NormalTok{pbta_hgat_dx_prog,}
+     \StringTok{"pbta-hgat-dx-wgs-rna"}\NormalTok{=}\StringTok{ }\NormalTok{pbta_hgat_dx_wgs_rna)}
+
+\NormalTok{rlist}\OperatorTok{::}\KeywordTok{list.save}\NormalTok{(count,}
+             \DataTypeTok{file =} \KeywordTok{file.path}\NormalTok{(root_dir,}
+                       \StringTok{"analyses"}\NormalTok{,}
+                       \StringTok{"mol-clinical-annotation-files"}\NormalTok{,}
+                       \StringTok{"output"}\NormalTok{,}
+                       \StringTok{"annotation_files"}\NormalTok{,}
+                       \StringTok{"count_experimental_strategy_per_cohort.yaml"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Check annotation columns}\label{check-annotation-columns}
+
+{[}1{]} ``H3.status''\\
+{[}2{]} ``integrated\_diagnosis''\\
+{[}3{]} ``cohort''\\
+{[}4{]} ``TP53alteration\_status''\\
+{[}5{]} ``OS\_status''\\
+{[}6{]} ``age\_at\_diagnosis\_less\_than\_1\_year''\\
+{[}7{]} ``age\_at\_diagnosis\_more\_than\_1\_less\_than\_5\_years''
+{[}8{]} ``age\_at\_diagnosis\_more\_than\_5\_less\_than\_10\_years''
+{[}9{]} ``age\_at\_diagnosis\_more\_than\_10\_years''\\
+{[}10{]} ``reported\_gender''\\
+{[}11{]} ``CNS\_region''\\
+{[}12{]} ``autopsy\_tumor\_location''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{annotation_cols <-}\StringTok{ }\KeywordTok{unlist}\NormalTok{(}\KeywordTok{str_split}\NormalTok{(}\StringTok{"H3.status,integrated_diagnosis,cohort,TP53alteration_status,OS_status,age_at_diagnosis_less_than_1_year,age_at_diagnosis_more_than_1_less_than_5_years,age_at_diagnosis_more_than_5_less_than_10_years,age_at_diagnosis_more_than_10_years,reported_gender,CNS_region,primary_site"}\NormalTok{, }\StringTok{","}\NormalTok{))}
+
+\NormalTok{get_count<-}\ControlFlowTok{function}\NormalTok{(x)\{}
+\NormalTok{cohort_plot_labels }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(short_histology}\OperatorTok{==}\StringTok{"HGAT"}\NormalTok{,sample_type}\OperatorTok{==}\StringTok{"Tumor"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{group_by}\NormalTok{(}\OperatorTok{!!}\KeywordTok{as.name}\NormalTok{(x)) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{tally}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{arrange}\NormalTok{(}\KeywordTok{desc}\NormalTok{(n))}
+\NormalTok{\}}
+
+\KeywordTok{lapply}\NormalTok{(annotation_cols,}\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{get_count}\NormalTok{(x))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## # A tibble: 4 x 2
+##   H3.status       n
+##   <chr>       <int>
+## 1 H3.3 K28      212
+## 2 H3 wildtype   181
+## 3 H3.3 G35       20
+## 4 H3.1 K28       18
+## 
+## [[2]]
+## # A tibble: 2 x 2
+##   integrated_diagnosis       n
+##   <chr>                  <int>
+## 1 Diffuse midline glioma   230
+## 2 High-grade glioma        201
+## 
+## [[3]]
+## # A tibble: 3 x 2
+##   cohort      n
+##   <chr>   <int>
+## 1 CBTTC     254
+## 2 PNOC003   131
+## 3 PNOC008    46
+## 
+## [[4]]
+## # A tibble: 2 x 2
+##   TP53alteration_status     n
+##   <chr>                 <int>
+## 1 Yes                     274
+## 2 No                      157
+## 
+## [[5]]
+## # A tibble: 3 x 2
+##   OS_status     n
+##   <chr>     <int>
+## 1 DECEASED    319
+## 2 LIVING       63
+## 3 <NA>         49
+## 
+## [[6]]
+## # A tibble: 3 x 2
+##   age_at_diagnosis_less_than_1_year     n
+##   <chr>                             <int>
+## 1 No                                  414
+## 2 Yes                                  16
+## 3 Not_Reported                          1
+## 
+## [[7]]
+## # A tibble: 3 x 2
+##   age_at_diagnosis_more_than_1_less_than_5_years     n
+##   <chr>                                          <int>
+## 1 No                                               366
+## 2 Yes                                               64
+## 3 Not_Reported                                       1
+## 
+## [[8]]
+## # A tibble: 3 x 2
+##   age_at_diagnosis_more_than_5_less_than_10_years     n
+##   <chr>                                           <int>
+## 1 No                                                233
+## 2 Yes                                               197
+## 3 Not_Reported                                        1
+## 
+## [[9]]
+## # A tibble: 3 x 2
+##   age_at_diagnosis_more_than_10_years     n
+##   <chr>                               <int>
+## 1 No                                    277
+## 2 Yes                                   153
+## 3 Not_Reported                            1
+## 
+## [[10]]
+## # A tibble: 3 x 2
+##   reported_gender     n
+##   <chr>           <int>
+## 1 Male              221
+## 2 Female            209
+## 3 Not Available       1
+## 
+## [[11]]
+## # A tibble: 7 x 2
+##   CNS_region          n
+##   <chr>           <int>
+## 1 Midline           219
+## 2 Hemispheric       123
+## 3 Other              61
+## 4 Posterior fossa    21
+## 5 <NA>                3
+## 6 Spine               2
+## 7 Ventricles          2
+## 
+## [[12]]
+## # A tibble: 76 x 2
+##    primary_site                          n
+##    <chr>                             <int>
+##  1 Pons/Brainstem                      118
+##  2 Thalamus                             43
+##  3 Temporal Lobe                        35
+##  4 Frontal Lobe                         31
+##  5 Brain Stem- Pons                     18
+##  6 Cerebellum/Posterior Fossa           18
+##  7 Parietal Lobe                        17
+##  8 Basal Ganglia;Thalamus                8
+##  9 Parietal Lobe;Temporal Lobe           7
+## 10 Temporal Lobe;Thalamus;Ventricles     6
+## # ... with 66 more rows
+\end{verbatim}
+
+```
+
+\end{document}

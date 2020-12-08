@@ -1,0 +1,86 @@
+---
+title: "Additional clinical annotation"
+output: html_notebook
+
+params:
+  cohort_label_file:
+    label: "Cohort specific annotation file"
+    value: data/release_003_008/pbta-histologies-base.tsv
+    input: file
+
+---
+
+In this notebook we will add categories for age and tumor_location for PNOC003 autopsy samples
+
+# Base histologies file 
+
+```{r}
+set.seed(12345)
+
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+setwd(root_dir)
+library(data.table)
+library(tidyverse)
+library(googlesheets4)
+
+cohort_plot_labels<-read_tsv(file.path(root_dir,params$cohort_label_file))
+```
+
+## Directories
+
+```{r echo=FALSE,message=FALSE,warning=FALSE}
+
+input_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "input")
+
+
+output_dir <- file.path(root_dir,
+                                     "analyses",
+                                     "mol-clinical-annotation-files",
+                                     "output",
+                        "annotation_files")
+```
+
+# Age breaks for HGAT 
+
+```{r}
+cohort_plot_labels<-cohort_plot_labels %>%
+  dplyr::mutate(age_at_diagnosis_days = as.numeric(age_at_diagnosis_days)) %>%
+  dplyr::mutate("age_at_diagnosis_less_than_1_year" = 
+                  ifelse (age_at_diagnosis_days<365 , "Yes","No")) %>%
+  dplyr::mutate("age_at_diagnosis_more_than_1_less_than_5_years" = 
+                  ifelse(age_at_diagnosis_days > 365 & age_at_diagnosis_days < 1825, "Yes","No")) %>%
+  dplyr::mutate("age_at_diagnosis_more_than_5_less_than_10_years" = 
+                  ifelse (age_at_diagnosis_days > 1825 & age_at_diagnosis_days < 3650 , "Yes","No")) %>%
+  dplyr::mutate("age_at_diagnosis_more_than_10_years" = 
+                  ifelse (age_at_diagnosis_days > 3650 , "Yes","No")) 
+
+cohort_plot_labels[is.na(cohort_plot_labels$age_at_diagnosis_days),
+                   c("age_at_diagnosis_less_than_1_year",
+                     "age_at_diagnosis_more_than_1_less_than_5_years",
+                     "age_at_diagnosis_more_than_5_less_than_10_years",
+                     "age_at_diagnosis_more_than_10_years")] <- "Not_Reported"
+
+cohort_plot_labels[,c("Kids_First_Biospecimen_ID",
+                      "age_at_diagnosis_less_than_1_year",
+                      "age_at_diagnosis_more_than_1_less_than_5_years",
+                      "age_at_diagnosis_more_than_5_less_than_10_years",
+                      "age_at_diagnosis_more_than_10_years")] %>% 
+  write_tsv(file.path(output_dir,
+                      "age_breaks_file.tsv"))
+                
+```
+
+# Tumor_location for autposy
+
+```{r}
+
+autopsy_location <- read_sheet("https://docs.google.com/spreadsheets/d/1LRAuglLBzkKRhjzS9PtgVhqYMJqjlovDT-8-_jlJp5E/edit#gid=310829697",range = "cohort_2_pnoc003-dx-prog-pm 110320") %>%
+  dplyr::select(Kids_First_Biospecimen_ID,primary_site) %>%
+  dplyr::filter(!is.na(Kids_First_Biospecimen_ID)) %>%
+  write_tsv(file.path(output_dir,
+                      "tumor_location.tsv"))
+
+```
