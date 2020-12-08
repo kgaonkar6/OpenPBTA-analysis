@@ -15,7 +15,7 @@ aws s3 --profile saml cp s3://d3b-bix-dev-data-bucket/hgg-dmg-integration/$RELEA
 aws s3 --profile saml cp s3://d3b-bix-dev-data-bucket/hgg-dmg-integration/$PREVIOUS/pbta-histologies.tsv data/release_003_008/pbta-histologies-base.tsv
 
 # merge new sample to get updated base histology
-Rscript code/00_add_new_pnoc008_histologies.R
+Rscript analyses/mol-clinical-annotation-files/code/00_add_new_pnoc008_histologies.R
 
 # run fusion filtering
 analyses/fusion_filtering/run_fusion_merged_003_008.sh 
@@ -25,3 +25,6 @@ analyses/molecular-subtyping-HGG/run-molecular-subtyping-HGG_003_008.sh
 
 # run update from path and clinical updates
 analyses/molecular-subtyping-pathology/run-subtyping-aggregation.sh
+
+# add molecular subtyping to base
+analyses/mol-clinical-annotation-files/run_mol_clinical_anno.sh 
