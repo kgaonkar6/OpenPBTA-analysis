@@ -133,6 +133,28 @@ filtered_on_dx_df <- histologies_df %>%
 filtered_on_dx_df
 ```
 
+And all samples from the PNOC008 trial should be included.
+
+Let's take a look at a first attempt using these terms as described above.
+
+```{r}
+filtered_on_dx_df <- histologies_df %>%
+  filter(pathology_diagnosis %in% exact_path_dx | 
+            cohort == "PNOC008",
+         # Exclude normal samples when filtering on cohort
+         sample_type != "Normal") %>%
+  select(Kids_First_Biospecimen_ID, 
+         sample_id, 
+         Kids_First_Participant_ID,
+         pathology_diagnosis,
+         pathology_free_text_diagnosis,
+         integrated_diagnosis, 
+         short_histology)
+
+filtered_on_dx_df
+```
+
+
 Let's tally the values in `pathology_diagnosis` in this data frame.
 
 ```{r}

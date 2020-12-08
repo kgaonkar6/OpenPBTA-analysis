@@ -36,6 +36,8 @@ input_dir <-
 results_dir <-
   file.path(root_dir, "analyses", "molecular-subtyping-HGG", "results")
 
+data_dir <- file.path(root_dir, "data","release_003_008")
+
 if (!dir.exists(results_dir)) {
   dir.create(results_dir)
 }
@@ -65,10 +67,7 @@ included_wgs_specimens <- hgg_metadata_df %>%
 Are all the WGS samples that pass the inclusion criteria in the consensus SEG file committed to the repository?
 
 ```{r}
-consensus_seg_ids <- read_tsv(file.path(root_dir, 
-                                        "analyses", 
-                                        "copy_number_consensus_call",
-                                        "results",
+consensus_seg_ids <- read_tsv(file.path(data_dir,
                                         "pbta-cnv-consensus.seg.gz")) %>%
   pull(ID)
 consensus_seg_ids <- unique(consensus_seg_ids)
@@ -110,7 +109,7 @@ Note that a gene may have evidence for two kinds of copy number alteration (e.g.
 ```{r}
 # Select only the ID information, for use in joining below
 cn_df_ids <- cn_df %>%  
-  select(sample_id, 
+  select(sample_id,
          Kids_First_Biospecimen_ID = biospecimen_id,
          Kids_First_Participant_ID)
 
@@ -135,7 +134,7 @@ cn_df_genes_status <- cn_df_genes %>%
          PDGFRA_focal_status = PDGFRA,
          PTEN_focal_status   = PTEN) %>%
   # Arrange order of columns
-  dplyr::select(sample_id, 
+  dplyr::select(sample_id,
                 Kids_First_Biospecimen_ID, 
                 Kids_First_Participant_ID, 
                 everything())
@@ -206,4 +205,3 @@ write_tsv(final_hgg_cn_df, output_file)
 ```{r}
 sessionInfo()
 ```
-

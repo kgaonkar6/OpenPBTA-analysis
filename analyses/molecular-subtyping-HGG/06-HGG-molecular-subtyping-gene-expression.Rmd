@@ -177,4 +177,3 @@ plot_expression_density(stranded_cleaned_expression)
 # Print session information
 sessionInfo()
 ```
-
