@@ -8,8 +8,6 @@ FileName |  Description | Owner | Sample list
 --- | --- | --- | ---
 pbta-histologies.tsv | clinical and annotation information for samples | @kgaonkar6 | v17 PBTA + all PNOC003 + till P-23 008
 
-
-
 ### To-Do 
 
 ### DNA-Seq
@@ -33,7 +31,6 @@ FileName |  Description | Owner | Sample list
 --- | --- | --- | ---
 gencode.v35.basic.annotation.gtf | GENCODE V35 hg38 gene annotation on primary assembly (reference chromosomes and scaffolds) | @tkoganti | NA
 pbta-fusion-arriba.tsv.gz | Fusion - Arriba TSV, annotated with FusionAnnotator | @kgaonkar6 | v17 PBTA + PNOC003 + 21 008
-pbta-fusion-putative-oncogenic.tsv | Filtered and prioritized fusions | @kgaonkar6 |  v17 PBTA + PNOC003 + 21 008
 pbta-fusion-starfusion.tsv.gz | Fusion - STARFusion TSV | @kgaonkar6 | v17 PBTA + PNOC003 + 21 008
 pbta-gene-expression-rsem-fpkm-collapsed.polya.rds | Gene expression - RSEM FPKM for poly-A samples (geneid-level) collapsed to gene symbol | @kgaonkar6 | v17 PBTA + PNOC003 + 21 008
 pbta-gene-expression-rsem-fpkm-collapsed.stranded.rds | Gene expression - RSEM FPKM for stranded  samples (geneid-level) collapsed to gene symbol | @kgaonkar6 | v17 PBTA + PNOC003 + 21 008

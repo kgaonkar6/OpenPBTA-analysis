@@ -8,7 +8,7 @@ set -o pipefail
 # Rscript code/00_merge_histologies.R						
 
 # add new PNOC008
-Rscript code/00_add_new_pnoc008_histologies.R
+# Rscript code/00_add_new_pnoc008_histologies.R
 
 # get cohort1 and cohort2 cohort3a and cohort3b membership annnotation
 Rscript -e "rmarkdown::render('code/01_cohort_membership.Rmd')"	
