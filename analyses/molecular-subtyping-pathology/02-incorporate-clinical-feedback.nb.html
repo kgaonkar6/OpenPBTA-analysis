@@ -519,7 +519,7 @@ results_dir &lt;- &quot;results&quot;</code></pre>
 clinical &lt;- readr::read_tsv(file.path(data_dir,
                                 &quot;pbta-histologies-base.tsv&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-message-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgYWdlX2F0X2RpYWdub3Npc19kYXlzID0gY29sX2RvdWJsZSgpLFxuICBPU19kYXlzID0gY29sX2RvdWJsZSgpLFxuICBhZ2VfbGFzdF91cGRhdGVfZGF5cyA9IGNvbF9kb3VibGUoKSxcbiAgbm9ybWFsX2ZyYWN0aW9uID0gY29sX2RvdWJsZSgpLFxuICB0dW1vcl9mcmFjdGlvbiA9IGNvbF9kb3VibGUoKSxcbiAgdHVtb3JfcGxvaWR5ID0gY29sX2RvdWJsZSgpLFxuICBnbGlvbWFfYnJhaW5fcmVnaW9uID0gY29sX2xvZ2ljYWwoKSxcbiAgY2FuY2VyX3ByZWRpc3Bvc2l0aW9uID0gY29sX2xvZ2ljYWwoKSxcbiAgZXh0ZW50X29mX3R1bW9yX3Jlc2VjdGlvbiA9IGNvbF9sb2dpY2FsKClcbilcbiJ9 -->
+<!-- rnb-message-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICAuZGVmYXVsdCA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgYWdlX2F0X2RpYWdub3Npc19kYXlzID0gY29sX2RvdWJsZSgpLFxuICBPU19kYXlzID0gY29sX2RvdWJsZSgpLFxuICBhZ2VfbGFzdF91cGRhdGVfZGF5cyA9IGNvbF9kb3VibGUoKSxcbiAgbm9ybWFsX2ZyYWN0aW9uID0gY29sX2RvdWJsZSgpLFxuICB0dW1vcl9mcmFjdGlvbiA9IGNvbF9kb3VibGUoKSxcbiAgdHVtb3JfcGxvaWR5ID0gY29sX2RvdWJsZSgpLFxuICBjYW5jZXJfcHJlZGlzcG9zaXRpb24gPSBjb2xfbG9naWNhbCgpLFxuICBUUDUzX01PRF9ISUdIX211dF9jb25zZW5zdXMgPSBjb2xfZG91YmxlKCksXG4gIFRQNTNfTU9EX0hJR0hfbXV0X3JuYV9zZXFfc252ID0gY29sX2RvdWJsZSgpLFxuICBUUDUzX2dhaW5fY29uc2Vuc3VzX2NudiA9IGNvbF9kb3VibGUoKSxcbiAgVFA1M19sb3NzX2NvbnNlbnN1c19jbnYgPSBjb2xfZG91YmxlKClcbilcbiJ9 -->
 <pre><code>Parsed with column specification:
 cols(
   .default = col_character(),
@@ -529,14 +529,24 @@ cols(
   normal_fraction = col_double(),
   tumor_fraction = col_double(),
   tumor_ploidy = col_double(),
-  glioma_brain_region = col_logical(),
   cancer_predisposition = col_logical(),
-  extent_of_tumor_resection = col_logical()
+  TP53_MOD_HIGH_mut_consensus = col_double(),
+  TP53_MOD_HIGH_mut_rna_seq_snv = col_double(),
+  TP53_gain_consensus_cnv = col_double(),
+  TP53_loss_consensus_cnv = col_double()
 )</code></pre>
 <!-- rnb-message-end -->
 <!-- rnb-message-begin eyJkYXRhIjoiU2VlIHNwZWMoLi4uKSBmb3IgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbnMuXG4ifQ== -->
 <pre><code>See spec(...) for full column specifications.</code></pre>
 <!-- rnb-message-end -->
+<!-- rnb-warning-begin eyJkYXRhIjoiV2FybmluZzogNCBwYXJzaW5nIGZhaWx1cmVzLlxuIHJvdyAgICAgICAgICAgICAgICAgICBjb2wgZXhwZWN0ZWQgICAgICAgYWN0dWFsICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWxlXG4yODQ0IGFnZV9hdF9kaWFnbm9zaXNfZGF5cyBhIGRvdWJsZSBOb3QgUmVwb3J0ZWQgJy9Vc2Vycy9nYW9ua2Fyay9Eb2N1bWVudHMvT3BlblBCVEEtYW5hbHlzaXMvZGF0YS9yZWxlYXNlXzAwM18wMDgvcGJ0YS1oaXN0b2xvZ2llcy1iYXNlLnRzdidcbjI4NDkgYWdlX2F0X2RpYWdub3Npc19kYXlzIGEgZG91YmxlIE5vdCBSZXBvcnRlZCAnL1VzZXJzL2dhb25rYXJrL0RvY3VtZW50cy9PcGVuUEJUQS1hbmFseXNpcy9kYXRhL3JlbGVhc2VfMDAzXzAwOC9wYnRhLWhpc3RvbG9naWVzLWJhc2UudHN2J1xuMjg5NCBhZ2VfYXRfZGlhZ25vc2lzX2RheXMgYSBkb3VibGUgTm90IFJlcG9ydGVkICcvVXNlcnMvZ2FvbmthcmsvRG9jdW1lbnRzL09wZW5QQlRBLWFuYWx5c2lzL2RhdGEvcmVsZWFzZV8wMDNfMDA4L3BidGEtaGlzdG9sb2dpZXMtYmFzZS50c3YnXG4yOTAyIGFnZV9hdF9kaWFnbm9zaXNfZGF5cyBhIGRvdWJsZSBOb3QgUmVwb3J0ZWQgJy9Vc2Vycy9nYW9ua2Fyay9Eb2N1bWVudHMvT3BlblBCVEEtYW5hbHlzaXMvZGF0YS9yZWxlYXNlXzAwM18wMDgvcGJ0YS1oaXN0b2xvZ2llcy1iYXNlLnRzdidcbiJ9 -->
+<pre><code>Warning: 4 parsing failures.
+ row                   col expected       actual                                                                                         file
+2844 age_at_diagnosis_days a double Not Reported '/Users/gaonkark/Documents/OpenPBTA-analysis/data/release_003_008/pbta-histologies-base.tsv'
+2849 age_at_diagnosis_days a double Not Reported '/Users/gaonkark/Documents/OpenPBTA-analysis/data/release_003_008/pbta-histologies-base.tsv'
+2894 age_at_diagnosis_days a double Not Reported '/Users/gaonkark/Documents/OpenPBTA-analysis/data/release_003_008/pbta-histologies-base.tsv'
+2902 age_at_diagnosis_days a double Not Reported '/Users/gaonkark/Documents/OpenPBTA-analysis/data/release_003_008/pbta-histologies-base.tsv'</code></pre>
+<!-- rnb-warning-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->

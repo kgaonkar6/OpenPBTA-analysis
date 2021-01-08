@@ -89,6 +89,7 @@ A14567	BS_CX6KACX6	PT_CSKHQB16	neutral	neutral	loss	neutral	neutral	neutral	neut
 A18552	BS_JCWD4DMA	PT_DMAF1J4A	gain	gain	neutral	neutral	neutral	neutral	neutral	neutral	neutral
 7316-5005	BS_G65EA38C	PT_EN2RN5Y1	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
 A17997	BS_328C4BW5	PT_EN2RN5Y1	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
+neutral	BS_AH3RVK53	PT_EN2RN5Y1	neutral	neutral	neutral	gain	neutral	neutral	neutral	neutral	neutral
 7316-8031	BS_4SCDT7M9	PT_FKCPVY7V	gain	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
 7316-1085	BS_ZCY4ECNV	PT_FYPWZBH0	neutral	neutral	loss	neutral	neutral	neutral	neutral	neutral	neutral
 7316-5814	BS_JDZX545X	PT_G16VK7FR	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
@@ -180,7 +181,6 @@ A19015	BS_6687ZNGS	PT_RE6AXQM1	neutral	gain	neutral	neutral	neutral	neutral	neut
 A18777	BS_QZPGVNBB	PT_RYMG3M91	gain	neutral	neutral	gain	neutral	gain	gain	neutral	neutral
 7316-2307	BS_P3PF53V8	PT_S0Q27J13	neutral	neutral	loss	neutral	neutral	neutral	neutral	neutral	neutral
 7316-3000	BS_ABZ3BK38	PT_S2BEPYQ0	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
-7316-8716	BS_K24D4BGK	PT_SW4Q1HZP	neutral	neutral	neutral	gain	neutral	neutral	neutral	neutral	neutral
 7316-1106	BS_J4E9SW51	PT_T8V9ES93	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
 7316-8033	BS_7PAAZQE6	PT_TVJ5EGMR	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral	neutral
 7316-3215	BS_NNFDFAFM	PT_V1HNAC2Q	neutral	amplification	neutral	neutral	neutral	neutral	neutral	gain	gain

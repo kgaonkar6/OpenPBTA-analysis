@@ -503,9 +503,9 @@ defining_lesions_df &lt;- readr::read_tsv(file.path(results_dir,
   dplyr::filter(Variant_Classification != &quot;Silent&quot;,
                 Hugo_Symbol != &quot;TERT&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmF0aW8gb2YgdmFyaWFudHMgaW4gdGhpcyBCRUQ6IDIuMDcxNDYyIFxuIFJhdGlvIG9mIHZhcmlhbnRzIGJlaW5nIGZpbHRlcmVkIG91dDogLTEuMDcxNDYyIFxuIn0= -->
-<pre><code>Ratio of variants in this BED: 2.071462 
- Ratio of variants being filtered out: -1.071462 </code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiUmF0aW8gb2YgdmFyaWFudHMgaW4gdGhpcyBCRUQ6IDIuMDczODQ4IFxuIFJhdGlvIG9mIHZhcmlhbnRzIGJlaW5nIGZpbHRlcmVkIG91dDogLTEuMDczODQ4IFxuIn0= -->
+<pre><code>Ratio of variants in this BED: 2.073848 
+ Ratio of variants being filtered out: -1.073848 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiaGVhZChjb2Rpbmdfc252X2RmLCBuID0gMTApIn0= -->
 <pre class="r"><code>head(coding_snv_df, n = 10)</code></pre>
@@ -757,7 +757,7 @@ head(final_mutations_df, n = 10)</code></pre>
 <!-- rnb-source-begin eyJkYXRhIjoic2Vzc2lvbkluZm8oKSJ9 -->
 <pre class="r"><code>sessionInfo()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4xICgyMDE4LTA3LTAyKVxuUGxhdGZvcm06IHg4Nl82NC1hcHBsZS1kYXJ3aW4xNS42LjAgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IG1hY09TIFNpZXJyYSAxMC4xMi42XG5cbk1hdHJpeCBwcm9kdWN0czogZGVmYXVsdFxuQkxBUzogL0xpYnJhcnkvRnJhbWV3b3Jrcy9SLmZyYW1ld29yay9WZXJzaW9ucy8zLjUvUmVzb3VyY2VzL2xpYi9saWJSYmxhcy4wLmR5bGliXG5MQVBBQ0s6IC9MaWJyYXJ5L0ZyYW1ld29ya3MvUi5mcmFtZXdvcmsvVmVyc2lvbnMvMy41L1Jlc291cmNlcy9saWIvbGliUmxhcGFjay5keWxpYlxuXG5sb2NhbGU6XG5bMV0gZW5fVVMuVVRGLTgvZW5fVVMuVVRGLTgvZW5fVVMuVVRGLTgvQy9lbl9VUy5VVEYtOC9lbl9VUy5VVEYtOFxuXG5hdHRhY2hlZCBiYXNlIHBhY2thZ2VzOlxuWzFdIHN0YXRzICAgICBncmFwaGljcyAgZ3JEZXZpY2VzIHV0aWxzICAgICBkYXRhc2V0cyAgbWV0aG9kcyAgIGJhc2UgICAgIFxuXG5sb2FkZWQgdmlhIGEgbmFtZXNwYWNlIChhbmQgbm90IGF0dGFjaGVkKTpcbiBbMV0gUmNwcF8xLjAuNCAgICAgICAgICAgICBYVmVjdG9yXzAuMjIuMCAgICAgICAgIHBpbGxhcl8xLjQuMyAgICAgICAgICBcbiBbNF0gY29tcGlsZXJfMy41LjEgICAgICAgICBHZW5vbWVJbmZvRGJfMS4xOC4yICAgIHpsaWJiaW9jXzEuMjguMCAgICAgICBcbiBbN10gYml0b3BzXzEuMC02ICAgICAgICAgICBiYXNlNjRlbmNfMC4xLTMgICAgICAgIHRvb2xzXzMuNS4xICAgICAgICAgICBcblsxMF0gZGlnZXN0XzAuNi4yNSAgICAgICAgICBqc29ubGl0ZV8xLjYuMSAgICAgICAgIGV2YWx1YXRlXzAuMTQgICAgICAgICBcblsxM10gbGlmZWN5Y2xlXzAuMi4wICAgICAgICB0aWJibGVfMy4wLjAgICAgICAgICAgIHBrZ2NvbmZpZ18yLjAuMyAgICAgICBcblsxNl0gcmxhbmdfMC40LjYgICAgICAgICAgICBjbGlfMi4wLjIgICAgICAgICAgICAgIHlhbWxfMi4yLjEgICAgICAgICAgICBcblsxOV0gcGFyYWxsZWxfMy41LjEgICAgICAgICB4ZnVuXzAuMTIgICAgICAgICAgICAgIEdlbm9tZUluZm9EYkRhdGFfMS4yLjBcblsyMl0gZHBseXJfMC44LjUgICAgICAgICAgICBzdHJpbmdyXzEuNC4wICAgICAgICAgIGtuaXRyXzEuMjggICAgICAgICAgICBcblsyNV0gdmN0cnNfMC4yLjQgICAgICAgICAgICBTNFZlY3RvcnNfMC4yMC4xICAgICAgIGhtc18wLjUuMyAgICAgICAgICAgICBcblsyOF0gSVJhbmdlc18yLjE2LjAgICAgICAgICBzdGF0czRfMy41LjEgICAgICAgICAgIHJwcm9qcm9vdF8xLjMtMiAgICAgICBcblszMV0gdGlkeXNlbGVjdF8xLjAuMCAgICAgICBnbHVlXzEuNC4wICAgICAgICAgICAgIFI2XzIuNC4xICAgICAgICAgICAgICBcblszNF0gZmFuc2lfMC40LjEgICAgICAgICAgICBybWFya2Rvd25fMi4zICAgICAgICAgIHB1cnJyXzAuMy40ICAgICAgICAgICBcblszN10gcmVhZHJfMS4zLjEgICAgICAgICAgICBtYWdyaXR0cl8xLjUgICAgICAgICAgIGJhY2twb3J0c18xLjEuNiAgICAgICBcbls0MF0gZWxsaXBzaXNfMC4zLjAgICAgICAgICBodG1sdG9vbHNfMC40LjAgICAgICAgIEdlbm9taWNSYW5nZXNfMS4zNC4wICBcbls0M10gQmlvY0dlbmVyaWNzXzAuMjguMCAgICBhc3NlcnR0aGF0XzAuMi4xICAgICAgIHN0cmluZ2lfMS40LjYgICAgICAgICBcbls0Nl0gUkN1cmxfMS45NS00LjExICAgICAgICBjcmF5b25fMS4zLjQgICAgICAgICAgXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4xICgyMDE4LTA3LTAyKVxuUGxhdGZvcm06IHg4Nl82NC1hcHBsZS1kYXJ3aW4xNS42LjAgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IG1hY09TIFNpZXJyYSAxMC4xMi42XG5cbk1hdHJpeCBwcm9kdWN0czogZGVmYXVsdFxuQkxBUzogL0xpYnJhcnkvRnJhbWV3b3Jrcy9SLmZyYW1ld29yay9WZXJzaW9ucy8zLjUvUmVzb3VyY2VzL2xpYi9saWJSYmxhcy4wLmR5bGliXG5MQVBBQ0s6IC9MaWJyYXJ5L0ZyYW1ld29ya3MvUi5mcmFtZXdvcmsvVmVyc2lvbnMvMy41L1Jlc291cmNlcy9saWIvbGliUmxhcGFjay5keWxpYlxuXG5sb2NhbGU6XG5bMV0gZW5fVVMuVVRGLTgvZW5fVVMuVVRGLTgvZW5fVVMuVVRGLTgvQy9lbl9VUy5VVEYtOC9lbl9VUy5VVEYtOFxuXG5hdHRhY2hlZCBiYXNlIHBhY2thZ2VzOlxuWzFdIHN0YXRzICAgICBncmFwaGljcyAgZ3JEZXZpY2VzIHV0aWxzICAgICBkYXRhc2V0cyAgbWV0aG9kcyAgIGJhc2UgICAgIFxuXG5sb2FkZWQgdmlhIGEgbmFtZXNwYWNlIChhbmQgbm90IGF0dGFjaGVkKTpcbiBbMV0gUmNwcF8xLjAuNCAgICAgICAgICAgICBYVmVjdG9yXzAuMjIuMCAgICAgICAgIHBpbGxhcl8xLjQuMyAgICAgICAgICBcbiBbNF0gY29tcGlsZXJfMy41LjEgICAgICAgICBHZW5vbWVJbmZvRGJfMS4xOC4yICAgIHpsaWJiaW9jXzEuMjguMCAgICAgICBcbiBbN10gYml0b3BzXzEuMC02ICAgICAgICAgICBiYXNlNjRlbmNfMC4xLTMgICAgICAgIHRvb2xzXzMuNS4xICAgICAgICAgICBcblsxMF0gZGlnZXN0XzAuNi4yNSAgICAgICAgICBqc29ubGl0ZV8xLjYuMSAgICAgICAgIGV2YWx1YXRlXzAuMTQgICAgICAgICBcblsxM10gbGlmZWN5Y2xlXzAuMi4wICAgICAgICB0aWJibGVfMy4wLjAgICAgICAgICAgIHBrZ2NvbmZpZ18yLjAuMyAgICAgICBcblsxNl0gcmxhbmdfMC40LjYgICAgICAgICAgICBjbGlfMi4wLjIgICAgICAgICAgICAgIHlhbWxfMi4yLjEgICAgICAgICAgICBcblsxOV0gcGFyYWxsZWxfMy41LjEgICAgICAgICB4ZnVuXzAuMTkgICAgICAgICAgICAgIEdlbm9tZUluZm9EYkRhdGFfMS4yLjBcblsyMl0gZHBseXJfMC44LjUgICAgICAgICAgICBzdHJpbmdyXzEuNC4wICAgICAgICAgIGtuaXRyXzEuMzAgICAgICAgICAgICBcblsyNV0gdmN0cnNfMC4yLjQgICAgICAgICAgICBTNFZlY3RvcnNfMC4yMC4xICAgICAgIGhtc18wLjUuMyAgICAgICAgICAgICBcblsyOF0gSVJhbmdlc18yLjE2LjAgICAgICAgICBzdGF0czRfMy41LjEgICAgICAgICAgIHJwcm9qcm9vdF8yLjAuMiAgICAgICBcblszMV0gdGlkeXNlbGVjdF8xLjAuMCAgICAgICBnbHVlXzEuNC4wICAgICAgICAgICAgIFI2XzIuNC4xICAgICAgICAgICAgICBcblszNF0gZmFuc2lfMC40LjEgICAgICAgICAgICBybWFya2Rvd25fMi4zICAgICAgICAgIHB1cnJyXzAuMy40ICAgICAgICAgICBcblszN10gcmVhZHJfMS4zLjEgICAgICAgICAgICBtYWdyaXR0cl8xLjUgICAgICAgICAgIGVsbGlwc2lzXzAuMy4wICAgICAgICBcbls0MF0gaHRtbHRvb2xzXzAuNC4wICAgICAgICBHZW5vbWljUmFuZ2VzXzEuMzQuMCAgIEJpb2NHZW5lcmljc18wLjI4LjAgICBcbls0M10gYXNzZXJ0dGhhdF8wLjIuMSAgICAgICBzdHJpbmdpXzEuNC42ICAgICAgICAgIFJDdXJsXzEuOTUtNC4xMSAgICAgICBcbls0Nl0gY3JheW9uXzEuMy40ICAgICAgICAgIFxuIn0= -->
 <pre><code>R version 3.5.1 (2018-07-02)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
 Running under: macOS Sierra 10.12.6
@@ -779,16 +779,16 @@ loaded via a namespace (and not attached):
 [10] digest_0.6.25          jsonlite_1.6.1         evaluate_0.14         
 [13] lifecycle_0.2.0        tibble_3.0.0           pkgconfig_2.0.3       
 [16] rlang_0.4.6            cli_2.0.2              yaml_2.2.1            
-[19] parallel_3.5.1         xfun_0.12              GenomeInfoDbData_1.2.0
-[22] dplyr_0.8.5            stringr_1.4.0          knitr_1.28            
+[19] parallel_3.5.1         xfun_0.19              GenomeInfoDbData_1.2.0
+[22] dplyr_0.8.5            stringr_1.4.0          knitr_1.30            
 [25] vctrs_0.2.4            S4Vectors_0.20.1       hms_0.5.3             
-[28] IRanges_2.16.0         stats4_3.5.1           rprojroot_1.3-2       
+[28] IRanges_2.16.0         stats4_3.5.1           rprojroot_2.0.2       
 [31] tidyselect_1.0.0       glue_1.4.0             R6_2.4.1              
 [34] fansi_0.4.1            rmarkdown_2.3          purrr_0.3.4           
-[37] readr_1.3.1            magrittr_1.5           backports_1.1.6       
-[40] ellipsis_0.3.0         htmltools_0.4.0        GenomicRanges_1.34.0  
-[43] BiocGenerics_0.28.0    assertthat_0.2.1       stringi_1.4.6         
-[46] RCurl_1.95-4.11        crayon_1.3.4          </code></pre>
+[37] readr_1.3.1            magrittr_1.5           ellipsis_0.3.0        
+[40] htmltools_0.4.0        GenomicRanges_1.34.0   BiocGenerics_0.28.0   
+[43] assertthat_0.2.1       stringi_1.4.6          RCurl_1.95-4.11       
+[46] crayon_1.3.4          </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
