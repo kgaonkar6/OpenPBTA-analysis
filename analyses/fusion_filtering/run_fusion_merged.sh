@@ -20,7 +20,7 @@ script_directory="$(perl -e 'use File::Basename;
 cd "$script_directory" || exit
 
 # Set up paths to data files consumed by analysis, and path to result output
-data_path="../../data"
+data_path="../../data/release_003_008"
 scratch_path="../../scratch"
 references_path="references"
 results_path="results/"

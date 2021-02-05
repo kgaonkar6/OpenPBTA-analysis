@@ -59,7 +59,7 @@ PT_1YQH5NSH | H3F3A K28M | Initial CNS Tumor
 
 ```{r}
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-data_dir <- file.path(root_dir, "data")
+data_dir <- file.path(root_dir, "data", "release_003_008")
 results_dir <- "results"
 ```
 

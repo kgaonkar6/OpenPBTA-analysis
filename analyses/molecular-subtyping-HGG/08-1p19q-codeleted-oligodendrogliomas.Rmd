@@ -34,7 +34,7 @@ library(tidyverse)
 ```{r}
 # File path to results directory -- this contains the cleaned data
 results_dir <- file.path("results")
-data_dir <- file.path("..", "..", "data")
+data_dir <- file.path("..", "..", "data", "release_003_008")
 scratch_dir <- file.path("..", "..", "scratch")
 ```
 
