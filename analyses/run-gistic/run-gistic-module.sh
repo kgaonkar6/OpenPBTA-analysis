@@ -45,7 +45,7 @@ else
   mkdir -p $alf_directory
 
   # These will be constant for every disease
-  consensus_segfile="../../data/pbta-cnv-consensus.seg.gz"
+  consensus_segfile="../copy_number_consensus_call/results/pbta-cnv-consensus.seg.gz"
   histologies_file="../../data/pbta-histologies.tsv"
   filter_column="short_histology"
 
