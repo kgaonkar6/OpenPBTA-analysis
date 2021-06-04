@@ -585,7 +585,7 @@ PT_CB9PD1YP	7316-97	BS_CVGFNCBJ	LGG, wildtype	Low-grade glioma/astrocytoma, wild
 PT_CB9PD1YP	7316-97	BS_WSFB4SA2	LGG, wildtype	Low-grade glioma/astrocytoma, wildtype	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_CEWNZVKF	7316-124	BS_PRR8K9GE	CRANIO, ADAM	Adamantimomatous craniopharyngioma	Craniopharyngioma	Tumors of sellar region	Updated via OpenPBTA subtyping
 PT_CEWNZVKF	7316-124	BS_MWXDJFWW	CRANIO, ADAM	Adamantimomatous craniopharyngioma	Craniopharyngioma	Tumors of sellar region	Updated via OpenPBTA subtyping
-PT_CG2S2H2R	7316-974	BS_J6VKB1VE	NA	NA	LGAT	Low-grade astrocytic tumor	NA
+PT_CG2S2H2R	7316-974	BS_J6VKB1VE	LGG, To be classified	NA	LGAT	Low-grade astrocytic tumor	NA
 PT_CGPJY881	7316-891	BS_N1E0H8YQ	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_CGPJY881	7316-891	BS_XKP747AS	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_CGWPWSXM	7316-2005	BS_QF5VVZX5	LGG, wildtype	Ganglioglioma, wildtype	Ganglioglioma	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
@@ -701,7 +701,7 @@ PT_EPFX7V9H	7316-2571	BS_FAQQ0GCQ	LGG, BRAF V600E	Ganglioglioma, BRAF V600E	Gang
 PT_EPFX7V9H	7316-2571	BS_NB509KST	LGG, BRAF V600E	Ganglioglioma, BRAF V600E	Ganglioglioma	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_EQ5C5TEA	7316-3922	BS_KEA474HN	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_EQ5C5TEA	7316-3922	BS_0S617SMM	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
-PT_ER1C7KPB	7316-2691	BS_D59VEERR	NA	NA	Ganglioglioma	Low-grade astrocytic tumor	NA
+PT_ER1C7KPB	7316-2691	BS_D59VEERR	LGG, To be classified	NA	Ganglioglioma	Low-grade astrocytic tumor	NA
 PT_EW604JB3	7316-1134	BS_SDA4RMMG	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_EW604JB3	7316-1134	BS_N8D9FH6M	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_EXYXBDGP	7316-3140	BS_4BWB0FA0	LGG, KIAA1549-BRAF	Low-grade glioma/astrocytoma, KIAA1549-BRAF	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
@@ -1053,8 +1053,8 @@ PT_NPETR8RY	7316-160	BS_4FZS7TX4	EPN, To be classified	NA	Ependymoma	Ependymal t
 PT_NPETR8RY	7316-160	BS_W5P7SPDH	EPN, To be classified	NA	Ependymoma	Ependymal tumor	NA
 PT_NPETR8RY	7316-1784	BS_53M8PP88	EPN, To be classified	NA	Ependymoma	Ependymal tumor	NA
 PT_NPETR8RY	7316-1784	BS_FSM39DXA	EPN, To be classified	NA	Ependymoma	Ependymal tumor	NA
-PT_NPHZQW6A	7316-1985	BS_7N0B2CY1	GNT, wildtype	GNT, wildtype	Ganglioglioma	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
-PT_NPHZQW6A	7316-1985	BS_B6KCJF2B	GNT, wildtype	GNT, wildtype	Ganglioglioma	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
+PT_NPHZQW6A	7316-1985	BS_7N0B2CY1	LGG, wildtype	Ganglioglioma, wildtype	Ganglioglioma	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
+PT_NPHZQW6A	7316-1985	BS_B6KCJF2B	LGG, wildtype	Ganglioglioma, wildtype	Ganglioglioma	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_NPPBNRVV	7316-1943	BS_D3YBV7KB	LGG, RTK	Low-grade glioma/astrocytoma, RTK	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_NPPBNRVV	7316-1943	BS_QA0W86WP	LGG, RTK	Low-grade glioma/astrocytoma, RTK	LGAT	Low-grade astrocytic tumor	Updated via OpenPBTA subtyping
 PT_NTEKMKTX	7316-1650	BS_RD4D5F9F	MB, SHH	Medulloblastoma, SHH-activated	Medulloblastoma	Embryonal tumor	Subtype based on prediction;Updated via OpenPBTA subtyping
